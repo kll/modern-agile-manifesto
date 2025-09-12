@@ -1,7 +1,12 @@
 default: true
 
-# Keep things simple: ignore artificial line-length violations
-MD013: false
+# Enforce max line length for Markdown content
+MD013:
+  line_length: 120
+  heading_line_length: 120
+  code_block_line_length: 0   # ignore code blocks
+  tables: false               # ignore tables
+  stern: false
 
 # Allow inline HTML if ever needed in docs (keep minimal usage)
 MD033: false
