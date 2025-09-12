@@ -1,0 +1,12 @@
+# Build artifacts
+_site/
+.jekyll-cache/
+.sass-cache/
+.bundle/
+vendor/
+
+# Node tooling (optional)
+node_modules/
+
+# macOS
+.DS_Store

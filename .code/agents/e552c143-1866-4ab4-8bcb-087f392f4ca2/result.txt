@@ -1,0 +1,291 @@
+Of course. Here are three distinct, self-contained plans for setting up your Jekyll + GitHub Pages site.
+
+**Recommendation:** Plan 2 (GitHub Actions) is the recommended approach. It offers maximum flexibility, access to any Jekyll plugin, and better control over the build process, which are significant advantages over the classic method. The initial setup is only slightly more complex and provides a more robust foundation for the future.
+
+---
+
+### **Shared Prerequisites: Ruby and Bundler Installation**
+
+All plans require a Ruby development environment.
+
+**1. Install Ruby:**
+*   **(macOS with Homebrew):** This is the simplest path for macOS users.
+    ```sh
+    brew install ruby
+    echo 'export PATH="/usr/local/opt/ruby/bin:$PATH"' >> ~/.zshrc
+    source ~/.zshrc
+    ```
+*   **(Cross-Platform with rbenv):** A robust version manager for any OS.
+    ```sh
+    # Install rbenv (follow official instructions for your OS)
+    rbenv install 3.3.0 # Or latest stable version
+    rbenv global 3.3.0
+    ```
+*   **Note:** Create a `.ruby-version` file in your project root with `3.3.0` to lock the version for your project.
+
+**2. Install Bundler:**
+Bundler manages your project's Ruby dependencies (gems).
+```sh
+gem install bundler
+```
+
+---
+
+### **Plan 1: The Quick Start (Classic GitHub Pages)**
+
+This plan uses the `github-pages` gem, which simplifies setup by bundling all necessary and GitHub-approved components. It's fast to set up but restrictive.
+
+*   **Pros:** Easiest setup, managed by GitHub.
+*   **Cons:** You can *only* use plugins on [GitHub's approved list](https://pages.github.com/versions/). Less control over Jekyll and plugin versions.
+
+#### **1. Repository Structure**
+```
+/
+├── .gitignore
+├── Gemfile
+├── _config.yml
+├── index.md
+└── _posts/
+    └── YYYY-MM-DD-welcome-to-jekyll.markdown
+```
+
+#### **2. Setup and Configuration**
+
+1.  **Create `Gemfile`:** This file specifies your dependencies.
+    ```ruby
+    # Gemfile
+    source "https://rubygems.org"
+    gem "github-pages", group: :jekyll_plugins
+    ```
+
+2.  **Create `_config.yml`:** The main configuration file for your site.
+    ```yaml
+    # _config.yml
+    title: My Awesome Site
+    author: Your Name
+    description: >-
+      A great description for your new site.
+    
+    # GitHub Pages settings
+    # Use 'minima' for a clean, default theme. It's bundled with the github-pages gem.
+    theme: minima
+    
+    # List of approved plugins that are part of the github-pages gem
+    plugins:
+      - jekyll-feed
+      - jekyll-seo-tag
+      - jekyll-sitemap
+    
+    # For a project site like username.github.io/manifesto, set the baseurl.
+    # For a user/org site like username.github.io, leave it blank.
+    baseurl: "/manifesto" # The subpath of your site, e.g. /blog
+    url: "https://<username>.github.io" # Your site's domain
+    
+    # Permalink structure for blog posts
+    permalink: /:year/:month/:day/:title:output_ext
+    ```
+
+3.  **Install Gems:**
+    ```sh
+    bundle install
+    ```
+    This reads the `Gemfile` and installs the `github-pages` gem and all its dependencies, creating a `Gemfile.lock` to pin their versions.
+
+#### **3. Local Development**
+
+Run the local Jekyll server:
+```sh
+bundle exec jekyll serve --livereload
+```
+Navigate to `http://127.0.0.1:4000` in your browser. The `--livereload` flag automatically refreshes the page when you save a file.
+
+**Pitfall:** The `url` and `baseurl` in `_config.yml` are for the production build. Locally, Jekyll overrides this to work at `localhost:4000`. Do not change them for local testing.
+
+#### **4. Publishing to GitHub Pages**
+
+1.  **Commit and Push:** Add all your files, commit, and push to the `main` branch on GitHub.
+2.  **Configure GitHub Pages:**
+    *   In your GitHub repo, go to `Settings` > `Pages`.
+    *   Under `Build and deployment`, set the `Source` to `Deploy from a branch`.
+    *   Set the `Branch` to `main` and the folder to `/(root)`.
+    *   GitHub will automatically detect the Jekyll setup, build your site, and deploy it.
+
+---
+
+### **Plan 2: The Recommended Standard (GitHub Actions)**
+
+This plan uses a GitHub Actions workflow to build your site. It gives you full control over the build process and allows you to use any Jekyll plugin.
+
+*   **Pros:** Full plugin support, version control, build customization (e.g., running tests).
+*   **Cons:** Requires creating a workflow file; slightly more complex initial setup.
+
+#### **1. Repository Structure**
+```
+/
+├── .github/
+│   └── workflows/
+│       └── pages.yml
+├── .gitignore
+├── Gemfile
+├── _config.yml
+├── index.md
+└── _posts/
+    └── YYYY-MM-DD-welcome-to-jekyll.markdown
+```
+
+#### **2. Setup and Configuration**
+
+1.  **Create `Gemfile`:** You specify `jekyll` directly, plus any plugins you want.
+    ```ruby
+    # Gemfile
+    source "https://rubygems.org"
+    gem "jekyll", "~> 4.3"
+    gem "jekyll-feed", "~> 0.17"
+    gem "jekyll-seo-tag", "~> 2.8"
+    gem "jekyll-sitemap", "~> 1.4"
+    gem "minima", "~> 2.5" # Or another theme gem
+    ```
+
+2.  **Create `_config.yml`:** Similar to Plan 1, but you explicitly list your theme and plugins.
+    ```yaml
+    # _config.yml
+    title: My Awesome Site
+    author: Your Name
+    description: A great description for your new site.
+    
+    theme: minima
+    plugins:
+      - jekyll-feed
+      - jekyll-seo-tag
+      - jekyll-sitemap
+    
+    baseurl: "/manifesto"
+    url: "https://<username>.github.io"
+    permalink: /:year/:month/:day/:title:output_ext
+    ```
+
+3.  **Install Gems:**
+    ```sh
+    bundle install
+    ```
+
+#### **3. Local Development**
+
+The command is identical to Plan 1:
+```sh
+bundle exec jekyll serve --livereload
+```
+
+#### **4. Publishing with GitHub Actions**
+
+1.  **Create Workflow File:** Create `.github/workflows/pages.yml`. This tells GitHub how to build and deploy your site.
+    ```yaml
+    # .github/workflows/pages.yml
+    name: Deploy Jekyll site to Pages
+    
+    on:
+      push:
+        branches: ["main"]
+      workflow_dispatch:
+    
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    
+    concurrency:
+      group: "pages"
+      cancel-in-progress: true
+    
+    jobs:
+      build:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4
+          - name: Setup Ruby
+            uses: ruby/setup-ruby@v1
+            with:
+              ruby-version: '3.3' # Should match your .ruby-version file
+              bundler-cache: true # Automatically runs 'bundle install' and caches gems
+          - name: Build with Jekyll
+            run: bundle exec jekyll build --baseurl "${{ steps.deploy.outputs.baseurl }}"
+            env:
+              JEKYLL_ENV: production
+          - name: Upload artifact
+            uses: actions/upload-pages-artifact@v3
+    
+      deploy:
+        environment:
+          name: github-pages
+          url: ${{ steps.deployment.outputs.page_url }}
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+          - name: Deploy to GitHub Pages
+            id: deployment
+            uses: actions/deploy-pages@v4
+    ```
+
+2.  **Configure GitHub Pages:**
+    *   In your GitHub repo, go to `Settings` > `Pages`.
+    *   Under `Build and deployment`, set the `Source` to `GitHub Actions`.
+
+3.  **Commit and Push:** Add all files (including the workflow), commit, and push to `main`. The Action will run automatically, building and deploying your site.
+
+---
+
+### **Plan 3: The Content-First Approach**
+
+This plan is for those who want to start writing immediately and structure the site later. You begin with plain Markdown files and progressively add the Jekyll structure from Plan 1 or 2.
+
+*   **Pros:** Zero initial setup; focus entirely on writing.
+*   **Cons:** The content isn't a "website" until you add Jekyll; requires a migration step.
+
+#### **1. Initial "Structure" (Content Only)**
+```
+/
+├── README.md
+├── about.md
+└── articles/
+    ├── first-post.md
+    └── second-post.md
+```
+At this stage, the repository is just a collection of Markdown files. They are readable on GitHub, but not a website.
+
+#### **2. Migration to a Jekyll Site**
+
+When you're ready to turn it into a website, you'll follow either Plan 1 or Plan 2 for the setup. The key difference is how you integrate your existing content.
+
+1.  **Follow Setup:** Complete the setup steps from **Plan 2 (Recommended)**.
+2.  **Move Content:**
+    *   Rename `articles/` to `_posts/`.
+    *   Rename your post files to include the date: `YYYY-MM-DD-first-post.md`.
+    *   Move `about.md` into a `pages/` directory or leave it at the root.
+3.  **Add Front Matter:** Edit each post and page to add Jekyll front matter at the top. This metadata tells Jekyll how to process the file.
+
+    **Example for a post (`_posts/2025-09-12-first-post.md`):**
+    ```markdown
+    ---
+    layout: post
+    title: "My First Post"
+    date: 2025-09-12 10:00:00 -0700
+    categories: thoughts
+    ---
+    
+    Here is the content of my first post...
+    ```
+
+    **Example for a page (`pages/about.md`):**
+    ```markdown
+    ---
+    layout: page
+    title: "About Me"
+    permalink: /about/
+    ---
+    
+    This page is all about me.
+    ```
+4.  **Create Layouts:** You will need to create the layouts referenced in your front matter (e.g., `_layouts/post.html`, `_layouts/page.html`). You can start with very simple ones or copy them from a theme like `minima`.
+
+After these steps, your content is fully integrated into a Jekyll site, and you can proceed with local development and publishing as described in the other plans.

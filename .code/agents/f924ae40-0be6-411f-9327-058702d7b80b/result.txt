@@ -1,0 +1,2228 @@
+[2025-09-12T17:26:12] Code v0.2.117
+--------
+workdir: /Users/kevinlewis/manifesto
+model: gpt-5
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: medium
+reasoning summaries: auto
+--------
+[2025-09-12T17:26:12] User instructions:
+Context: Working directory: /Users/kevinlewis/manifesto. Repo is empty (no files yet). Goal is to plan setup for a Jekyll + GitHub Pages site that publishes Markdown content with a clean minimal default theme, local dev workflow, and CI/CD via GitHub Pages. Planning only (read-only).
+
+Agent: Plan: Set up and run a new Jekyll-powered public GitHub Pages site that serves content written in Markdown files.
+
+Context:
+- Repository: /Users/kevinlewis/manifesto (currently empty; only .git present; branch: main; no commits yet).
+- Goal: A public website hosted via GitHub Pages, built with Jekyll, where authors create content in Markdown. Prefer a clean, minimal default theme to start, easily replaceable later. Support local preview and CI/CD publishing on push to main.
+- Constraints:
+  - Planning mode only (read_only); do not modify files.
+  - Target audience: a personal/public site named “manifesto” (can be generalized in instructions).
+  - Prefer reproducible, minimal setup; pin versions where reasonable.
+  - Assume macOS dev environment with Homebrew available; but avoid platform-specific lock-in.
+  - Keep GitHub Pages defaults in mind as of 2025: Pages supports either the built-in Pages ‘static’ build with the `github-pages` gem (safe plugins only) OR a GitHub Actions workflow that runs `jekyll build` and uploads the artifact.
+
+Deliverables to propose (plan only):
+1) Repo layout for a Jekyll site suitable for GitHub Pages.
+2) Setup steps: prerequisites (Ruby/Bundler), dependency management (Gemfile), site initialization, configuration (`_config.yml`), theme choice, plugins (safe for Pages).
+3) Local development workflow: install, run, live reload.
+4) Publishing options: (A) classic Pages build with `github-pages` gem; (B) GitHub Actions build-and-deploy. Recommend one and explain trade-offs.
+5) GitHub configuration: branch/paths for Pages, branch protection, PR preview options, Actions permissions.
+6) Content model: directories (`_posts`, pages, collections), naming, front matter conventions, permalinks, Markdown extensions.
+7) Navigation and layouts: minimal nav, index/home, blog listing, post layout, syntax highlighting, RSS/Atom feed.
+8) Assets and SEO: static assets, Open Graph, sitemap, robots, canonical URLs, analytics.
+9) Testing/quality: link checking, markdown lint, pre-commit or CI checks.
+10) Extensibility: themes, collections, data files, i18n, drafts, pagination.
+11) Migration guidance (if starting from empty repo) vs. converting existing markdown documents.
+
+Repository structure to recommend (you may adjust):
+/
+- Gemfile
+- Gemfile.lock (generated)
+- _config.yml
+- _posts/
+- pages/ (e.g., about.md, contact.md)
+- _layouts/ (default.html, post.html)
+- _includes/ (head.html, header.html, footer.html)
+- assets/
+  - css/
+  - img/
+  - js/
+- index.md (home page)
+- .gitignore
+- .github/workflows/pages.yml (for Actions-based Pages)
+- README.md
+- .ruby-version (optional; e.g., 3.3.x)
+- .editorconfig (optional)
+
+Key files to consider including in your plan (provide examples or snippets as needed):
+- Gemfile with either `github-pages` gem (for classic Pages) or `jekyll` + selected plugins.
+- _config.yml minimal baseline (site title, url/baseurl, theme, plugins, markdown, permalink).
+
+Expectations for the plan:
+- Provide step-by-step commands for both macOS (brew) and a language-agnostic Ruby install path (rbenv/asdf) where helpful.
+- Recommend a default theme (e.g., `minima` or a widely used GitHub Pages-compatible theme) and explain why.
+- Offer two publish strategies, pick a default recommendation, and clearly explain maintenance/security trade-offs.
+- Include a simple, copy-paste GitHub Actions workflow if you recommend Actions.
+- Include guidance for drafts, collections, and pagination.
+- Include minimal examples for front matter and navigation structure.
+- Include basic SEO and feed setup with safe plugins (`jekyll-sitemap`, `jekyll-feed`) or GitHub Pages equivalents.
+- Include optional niceties: markdownlint config, link checker, Dependabot for Ruby, caching strategy in Actions.
+
+Assumptions:
+- Owner will create a new GitHub repo (public) named `manifesto` or will push this repo to GitHub.
+- Pages will be hosted either as user/organization site (username.github.io) or as a project site. Provide notes for both.
+- No private content requirements.
+
+Please return:
+- A concise, well-structured, actionable plan with clear steps and rationale.
+- Separate sections for Local Dev, CI/CD, Content Structure, Theming, Plugins, and SEO.
+- Include commands and example file snippets where necessary.
+- Highlight pitfalls (e.g., safe plugin list, `baseurl` differences, `url` setting for local vs prod, caching) and how to avoid them.
+
+Note: The repository is currently empty—feel free to propose an initial commit plan and file list without writing files.
+
+
+Desired output: Three distinct step-by-step plans, each self-contained and ready to execute. Each plan should call out trade-offs and recommend a default path. Provide brief snippets for key files (Gemfile, _config.yml, workflow) and commands for macOS and cross-platform. Avoid writing files—planning only.
+
+[Running in read-only mode - no modifications allowed]
+
+[2025-09-12T17:26:20] thinking
+
+**Creating Step-by-Step Plans**
+
+I need to create three distinct, structured step-by-step plans for a project. Each plan should be self-contained and address various aspects like repo layout, setup for Ruby/Bundler, local workflows, and publishing options. I should also include snippets for relevant files, commands for macOS and cross-platform installations, and note potential pitfalls while recommending options. 
+
+I'll name these plans: Plan A for Classic GitHub Pages, Plan B for Actions-based Jekyll, and Plan C for a Hybrid approach. I’ll keep everything concise and organized under section headers!
+**Reviewing Jekyll Versions and Plugins**
+
+I'm looking into Jekyll version 4.3.3 as of 2025, but my last knowledge cutoff was in October 2024. I need to be cautious not to provide incorrect specifics here. For version specification, I could suggest using "> 4.3" along with Ruby constraints like ">= 3.1" and "< 4.0," or simply "3.3.x."
+
+For GitHub Pages' classic setup, the plugin options are limited, but for Actions, I can use any safe Jekyll plugins without the same restrictions. This flexibility allows for deploying static files effectively!
+**Exploring Jekyll and GitHub Pages Options**
+
+With the newer GitHub Pages Actions, we don't face the same restrictions, so I can include plugins like `jekyll-archives` and `jekyll-paginate-v2`, which are fine for Actions but not safe in the classic setup. 
+
+For theming, Minima is the default simple theme, making it a strong choice. We can customize it via assets and SCSS to adjust colors easily. 
+
+For repository layout, I'll include a `.github/workflows/pages.yml` file when using Actions and provide local setup commands with recommendations for rbenv. I'll also clarify URL and base URL settings!
+**Setting Up Jekyll Project Configuration**
+
+For the project site, I need to set the `url` to `https://username.github.io` and the `baseurl` to `"/manifesto"`. Links should use `{{ site.baseurl }}` or `relative_url`. Content setup involves creating posts in the `_posts/` directory with date-prefixed slugs and YAML front matter, and a `pages` directory for permalinks and navigation orders.
+
+For collections like `_notes`, I'll activate those in _config.yml. Drafts will go in `_drafts` with `--drafts` for local serving. I will use `jekyll-paginate` for classic setups or `jekyll-paginate-v2` for Actions. For navigation, a minimal nav can be created with header includes. 
+
+For syntax highlighting, I'll configure `highlighter: rouge`. I'll add jekyll-feed for RSS/Atom, use jekyll-seo-tag for SEO, and provide a sample `robots.txt` referencing `site.url`. Finally, I'll include a snippet for optional Google Analytics GA4 tracking.
+**Developing a Jekyll Project with Actions**
+
+I'll provide a minimal setup, including a generic snippet for head.html or use "jekyll-analytics." For Google Analytics, the Minima theme supports `google_analytics` but I need to clarify that GA4 uses a different Measurement ID.
+
+For planning, I'll outline how to use tools like `markdownlint` for testing, `htmlproofer` for link checking, and provide pre-commit configurations.
+
+We’re developing three distinct plans: 
+
+Plan 1: Classic GitHub Pages with limited plugins; 
+Plan 2: GitHub Actions build with advanced plugin support; 
+Plan 3: A containerized development environment using Docker for reproducibility.
+
+Each plan will include structured headers like Repo Layout, Setup, Local Dev, and more, with sample snippets and commands offered efficiently. Let’s get to it!
+[2025-09-12T17:27:07] codex
+**Reviewing Jekyll Versions and Plugins**
+
+I'm looking into Jekyll version 4.3.3 as of 2025, but my last knowledge cutoff was in October 2024. I need to be cautious not to provide incorrect specifics here. For version specification, I could suggest using "> 4.3" along with Ruby constraints like ">= 3.1" and "< 4.0," or simply "3.3.x."
+
+For GitHub Pages' classic setup, the plugin options are limited, but for Actions, I can use any safe Jekyll plugins without the same restrictions. This flexibility allows for deploying static files effectively!
+[2025-09-12T17:27:07] codex
+**Exploring Jekyll and GitHub Pages Options**
+
+With the newer GitHub Pages Actions, we don't face the same restrictions, so I can include plugins like `jekyll-archives` and `jekyll-paginate-v2`, which are fine for Actions but not safe in the classic setup. 
+
+For theming, Minima is the default simple theme, making it a strong choice. We can customize it via assets and SCSS to adjust colors easily. 
+
+For repository layout, I'll include a `.github/workflows/pages.yml` file when using Actions and provide local setup commands with recommendations for rbenv. I'll also clarify URL and base URL settings!
+[2025-09-12T17:27:07] codex
+**Setting Up Jekyll Project Configuration**
+
+For the project site, I need to set the `url` to `https://username.github.io` and the `baseurl` to `"/manifesto"`. Links should use `{{ site.baseurl }}` or `relative_url`. Content setup involves creating posts in the `_posts/` directory with date-prefixed slugs and YAML front matter, and a `pages` directory for permalinks and navigation orders.
+
+For collections like `_notes`, I'll activate those in _config.yml. Drafts will go in `_drafts` with `--drafts` for local serving. I will use `jekyll-paginate` for classic setups or `jekyll-paginate-v2` for Actions. For navigation, a minimal nav can be created with header includes. 
+
+For syntax highlighting, I'll configure `highlighter: rouge`. I'll add jekyll-feed for RSS/Atom, use jekyll-seo-tag for SEO, and provide a sample `robots.txt` referencing `site.url`. Finally, I'll include a snippet for optional Google Analytics GA4 tracking.
+[2025-09-12T17:27:07] codex
+**Developing a Jekyll Project with Actions**
+
+I'll provide a minimal setup, including a generic snippet for head.html or use "jekyll-analytics." For Google Analytics, the Minima theme supports `google_analytics` but I need to clarify that GA4 uses a different Measurement ID.
+
+For planning, I'll outline how to use tools like `markdownlint` for testing, `htmlproofer` for link checking, and provide pre-commit configurations.
+
+We’re developing three distinct plans: 
+
+Plan 1: Classic GitHub Pages with limited plugins; 
+Plan 2: GitHub Actions build with advanced plugin support; 
+Plan 3: A containerized development environment using Docker for reproducibility.
+
+Each plan will include structured headers like Repo Layout, Setup, Local Dev, and more, with sample snippets and commands offered efficiently. Let’s get to it!
+[2025-09-12T17:27:07] codex
+
+Below are three distinct, self-contained plans. Each can be executed independently to get a clean Jekyll + GitHub Pages site called “manifesto,” with local dev and CI/CD. I recommend Plan 2 for most cases due to flexibility, PR previews, and explicit version pinning.
+
+---
+
+**Plan 1: Classic GitHub Pages Build (github-pages gem) — lowest maintenance**
+
+- Summary: Let GitHub Pages build your site server-side using the `github-pages` gem. Easiest to operate; plugin set is constrained to Pages’ “safe” list. No Actions required. Good for simple blogs/landing pages.
+
+**Repository Layout**
+- `Gemfile`
+- `_config.yml`
+- `_posts/`
+- `pages/` (e.g., `about.md`)
+- `_layouts/` (override Minima if needed)
+- `_includes/` (e.g., `head.html`, `header.html`, `footer.html`)
+- `assets/` (`css/`, `img/`, `js/`)
+- `index.md`
+- `.gitignore`
+- `README.md`
+- `.ruby-version` (optional; e.g., `3.3.x`)
+- `.editorconfig` (optional)
+
+**Setup**
+- macOS (Homebrew)
+  - `brew install rbenv ruby-build`
+  - `rbenv install 3.3.0 && rbenv local 3.3.0`
+  - `gem install bundler`
+- Cross-platform
+  - Install `rbenv` or `asdf`:
+    - rbenv: follow rbenv docs, then `rbenv install 3.3.0 && rbenv local 3.3.0`
+    - asdf: `asdf plugin add ruby && asdf install ruby 3.3.0 && asdf local ruby 3.3.0`
+  - `gem install bundler`
+- Initialize
+  - `bundle init` then create `Gemfile` (below)
+  - `bundle install`
+
+Gemfile (classic Pages)
+```ruby
+source "https://rubygems.org"
+ruby ">= 3.1", "< 4.0"
+
+# GitHub Pages-managed Jekyll stack (pins Jekyll + safe plugins)
+gem "github-pages", group: :jekyll_plugins
+```
+
+**_config.yml (minimal)**
+```yaml
+title: "manifesto"
+description: "A minimal Jekyll site"
+url: "https://<username>.github.io"   # user/Org site
+baseurl: ""                            # "" for user site; "/manifesto" for project site
+theme: minima
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+markdown: kramdown
+highlighter: rouge
+permalink: /:categories/:year/:month/:day/:title/
+header_pages:
+  - pages/about.md
+```
+
+**Local Dev**
+- `bundle exec jekyll new . --force --skip-bundle` (optional, then remove extra files you don’t want)
+- `bundle install`
+- `bundle exec jekyll serve --livereload`
+- Drafts locally: `bundle exec jekyll serve --livereload --drafts`
+
+**CI/CD (Classic Pages)**
+- No workflow needed. In repo Settings > Pages:
+  - Build source: “Deploy from a branch”
+  - Branch: `main` and folder `/` (or `/docs` if you keep site in `docs/`)
+- Trade-offs:
+  - Pros: Zero CI setup, GitHub handles updates; low maintenance.
+  - Cons: Limited to safe plugins and versions pinned by `github-pages`; no PR preview deployments.
+
+**GitHub Configuration**
+- Branch protection: Protect `main` (require PR reviews, status checks if adding QA).
+- Pages: Set “main” + “/”.
+- Actions permissions: Not required for this plan.
+
+**Content Structure**
+- Posts: `_posts/YYYY-MM-DD-slug.md`
+- Pages: `pages/about.md` etc., with `permalink: /about/`
+- Collections (safe): `_notes/` configured via `_config.yml`:
+```yaml
+collections:
+  notes:
+    output: true
+    permalink: /notes/:name/
+```
+- Drafts: `_drafts/*.md` (served with `--drafts`)
+- Front matter example:
+```yaml
+---
+title: "My First Post"
+date: 2025-01-15
+categories: [thoughts]
+tags: [manifesto, ideas]
+excerpt: "Short summary."
+---
+```
+
+**Navigation & Layout**
+- Minima uses `header_pages` to set nav.
+- Create `_layouts/post.html` only if you need to override Minima.
+- Syntax highlighting: Rouge already on; use fenced code blocks.
+- RSS/Atom: `jekyll-feed` auto-creates `/feed.xml`.
+
+**SEO & Assets**
+- `jekyll-seo-tag`: Add `{% seo %}` in `_includes/head.html` (Minima includes it by default in recent versions).
+- `jekyll-sitemap`: Generates `/sitemap.xml`.
+- `robots.txt` (optional `robots.txt`):
+```
+User-agent: *
+Allow: /
+Sitemap: {{ site.url }}{{ site.baseurl }}/sitemap.xml
+```
+- Open Graph/Twitter Cards: handled by `jekyll-seo-tag` if `title`, `description`, and site images exist.
+- Analytics:
+  - If Minima supports `google_analytics`, set in `_config.yml`:
+    `google_analytics: G-XXXXXXXXXX`
+  - If not, add custom include in `head.html`.
+
+**Testing / Quality**
+- `html-proofer` (local or CI via Actions if you add it):
+  - `gem install html-proofer`
+  - `bundle exec jekyll build && htmlproofer ./_site --check-external-hash`
+- Markdownlint (Node):
+  - `npm i -D markdownlint-cli`
+  - `npx markdownlint "**/*.md" -c .markdownlint.yml`
+- Dependabot: Enable for “Bundler” updates in GitHub settings.
+
+**Extensibility**
+- Themes: Use `theme: minima`. Swap to any Pages-supported theme.
+- Pagination: Use `jekyll-paginate` (safe) if needed:
+```yaml
+plugins: [jekyll-feed, jekyll-sitemap, jekyll-seo-tag, jekyll-paginate]
+paginate: 5
+paginate_path: "/page:num/"
+```
+- i18n: Limited via classic; better with Actions (Plan 2 or 3).
+- Data files: `_data/*.yml` accessible via `site.data`.
+
+**Migration**
+- Existing Markdown: Move posts into `_posts/` with dates; other docs into `pages/` or a collection.
+- Ensure each Markdown file has front matter. Use `{% link %}` or `relative_url` filter to avoid broken links.
+- For project site: set `baseurl: "/manifesto"` and use `{{ "/path/" | relative_url }}` for internal links.
+
+**Pitfalls**
+- Plugins limited to Pages’ safe list; do not pin plugin versions directly—`github-pages` manages them.
+- Keep `url` and `baseurl` correct for user vs project sites.
+- Avoid absolute root links; use `relative_url`.
+
+---
+
+**Plan 2 (Recommended): GitHub Actions Build + Pages Deploy — flexible and modern**
+
+- Summary: Build with Actions, deploy artifact to Pages. Enables PR preview deployments, broader plugin/theme choices, and explicit version pinning.
+
+**Repository Layout**
+- Same as Plan 1 plus:
+- `.github/workflows/pages.yml`
+
+**Setup**
+- macOS
+  - `brew install rbenv ruby-build`
+  - `rbenv install 3.3.0 && rbenv local 3.3.0`
+  - `gem install bundler`
+- Cross-platform
+  - rbenv or asdf (same as Plan 1)
+- Initialize
+  - `bundle init`
+  - `bundle add jekyll -v "~> 4.3"`
+  - `bundle add jekyll-feed jekyll-sitemap jekyll-seo-tag`
+  - Optional advanced plugins (not allowed in classic but fine here):
+    - `bundle add jekyll-paginate-v2 jekyll-archives jekyll-redirect-from`
+  - `bundle install`
+
+Gemfile (Actions-based)
+```ruby
+source "https://rubygems.org"
+ruby ">= 3.1", "< 4.0"
+
+gem "jekyll", "~> 4.3"
+
+group :jekyll_plugins do
+  gem "jekyll-feed", "~> 0.17"
+  gem "jekyll-sitemap", "~> 1.4"
+  gem "jekyll-seo-tag", "~> 2.8"
+  # Optional advanced plugins:
+  # gem "jekyll-paginate-v2", "~> 3.0"
+  # gem "jekyll-archives", "~> 0.6"
+  # gem "jekyll-redirect-from", "~> 0.16"
+end
+```
+
+**_config.yml (baseline)**
+```yaml
+title: "manifesto"
+description: "A minimal, fast Jekyll site"
+url: "https://<username>.github.io"  # user/Org site
+baseurl: ""                           # "/manifesto" for project site
+theme: minima
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  # - jekyll-paginate-v2
+  # - jekyll-archives
+  # - jekyll-redirect-from
+
+markdown: kramdown
+highlighter: rouge
+permalink: /:categories/:year/:month/:day/:title/
+header_pages:
+  - pages/about.md
+
+# Pagination (if using jekyll-paginate-v2)
+# pagination:
+#   enabled: true
+#   per_page: 8
+#   title: ":title - page :num"
+#   permalink: /page/:num/
+```
+
+**Local Dev**
+- `bundle install`
+- `bundle exec jekyll serve --livereload`
+- Drafts: `bundle exec jekyll serve --livereload --drafts`
+
+**CI/CD (GitHub Actions + Pages)**
+- `.github/workflows/pages.yml`
+```yaml
+name: Build and Deploy to Pages
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+
+      - name: Build site
+        run: |
+          bundle install --jobs 4 --retry 3
+          bundle exec jekyll build --trace
+        env:
+          JEKYLL_ENV: production
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
+```
+- In repo Settings > Pages: Source = “GitHub Actions”.
+- PR previews: The `pull_request` trigger creates ephemeral preview deployments with distinct URLs.
+- Trade-offs:
+  - Pros: Full control over versions/plugins, PR previews, reproducible builds.
+  - Cons: Slightly more setup; maintain dependencies yourself.
+
+**GitHub Configuration**
+- Branch protection on `main`.
+- Actions permissions set by workflow.
+- Optional required status checks: “Build and Deploy to Pages: build” plus QA jobs.
+- Secrets: None needed unless adding analytics keys or custom plugins requiring tokens.
+
+**Content Structure**
+- Same as Plan 1. Add collections/pagination if using advanced plugins (e.g., `jekyll-paginate-v2` supports categories pagination).
+- Front matter same as Plan 1.
+
+**Navigation & Layout**
+- Start with Minima. Override `_includes/header.html` to customize nav, or use `header_pages`.
+- Add `_layouts/home.html` for a custom landing or `_layouts/list.html` for collections.
+
+**SEO & Assets**
+- Same as Plan 1; `jekyll-seo-tag` + `jekyll-sitemap`.
+- Add `assets/img/og-image.png` and set:
+```yaml
+defaults:
+  - scope: { path: "" }
+    values:
+      image: /assets/img/og-image.png
+```
+- Analytics: either `google_analytics:` in `_config.yml` (if theme supports) or custom include.
+
+**Testing / Quality**
+- Add an optional QA job:
+```yaml
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with: { ruby-version: '3.3', bundler-cache: true }
+      - run: bundle install
+      - run: bundle exec jekyll build
+      - run: gem install html-proofer && htmlproofer ./_site --check-external-hash
+```
+- Markdownlint:
+  - `.markdownlint.yml` example:
+    `default: true` and `MD013: { line_length: 120 }`
+  - Add a Node step in `qa` to run `markdownlint`.
+
+**Extensibility**
+- Themes: Can switch from Minima to any Jekyll theme.
+- Collections: `_data/*.yml` and `_notes/` fully supported.
+- i18n: `jekyll-polyglot` works in Actions build:
+```yaml
+plugins: [jekyll-seo-tag, jekyll-sitemap, jekyll-feed, jekyll-polyglot]
+languages: ["en", "es"]
+default_lang: "en"
+```
+- Pagination: Prefer `jekyll-paginate-v2` for richer features.
+
+**Migration**
+- Same as Plan 1; Actions path makes advanced plugins available for more complex structures and redirects.
+- Use `jekyll-redirect-from` to preserve old URLs.
+
+**Pitfalls**
+- Always use `{{ "/path/" | relative_url }}` to respect `baseurl`.
+- Cache: `bundler-cache: true` already helps. Avoid caching `_site`.
+- Keep Ruby/Jekyll versions pinned in Gemfile for reproducibility.
+
+---
+
+**Plan 3: Reproducible Dev via asdf or Docker + Actions Deploy — team-friendly and portable**
+
+- Summary: Standardize Ruby with `asdf` (or Docker) locally to match CI. Great for teams/multiple machines. Uses Actions for deploy (like Plan 2).
+
+**Repository Layout**
+- As Plan 2 plus:
+- `.tool-versions` (for asdf) or `Dockerfile` and `docker-compose.yml`
+- `.devcontainer/devcontainer.json` (optional, if using VS Code Dev Containers)
+
+**Setup (Option A: asdf)**
+- macOS
+  - `brew install asdf`
+  - `asdf plugin add ruby`
+  - `asdf install ruby 3.3.0`
+  - `asdf local ruby 3.3.0`
+  - `gem install bundler`
+- Cross-platform
+  - Install `asdf` via docs
+  - Same plugin/install steps as above
+
+**Setup (Option B: Docker)**
+- `Dockerfile` (example)
+```dockerfile
+FROM ruby:3.3-alpine
+RUN apk add --no-cache build-base nodejs
+WORKDIR /site
+COPY Gemfile Gemfile.lock* /site/
+RUN bundle install
+COPY . /site
+EXPOSE 4000
+CMD ["sh", "-lc", "bundle exec jekyll serve --host 0.0.0.0 --livereload"]
+```
+- `docker compose up --build` for local dev at `http://localhost:4000`
+- Note: Livereload works, but some systems need port mappings:
+  - `ports: ["4000:4000", "35729:35729"]`
+
+Gemfile and `_config.yml`
+- Same as Plan 2 (Actions-based), pin versions.
+
+**Local Dev**
+- asdf path:
+  - `bundle install`
+  - `bundle exec jekyll serve --livereload`
+- Docker path:
+  - `docker compose up --build` (or `docker run -p 4000:4000 -p 35729:35729 -v "$PWD:/site" --rm <image>`)
+
+**CI/CD**
+- Same workflow as Plan 2 (`pages.yml`) — builds in GitHub-hosted container.
+- Add caching for `.jekyll-cache` if desired:
+```yaml
+      - uses: actions/cache@v4
+        with:
+          path: .jekyll-cache
+          key: jekyll-${{ runner.os }}-${{ hashFiles('**/*.md','**/*.html','**/*.scss','_config.yml','Gemfile.lock') }}
+          restore-keys: jekyll-${{ runner.os }}-
+```
+
+**GitHub Configuration**
+- Same[2025-09-12T17:28:44] ERROR: stream error: stream disconnected before completion: Transport error: error decoding response body; retrying 1/5 in 183ms…
+
+[2025-09-12T17:28:51] thinking
+
+**Developing structured plans**
+
+I need to continue and present three distinct plans without repeating earlier content. Since the user only asks for planning and the repo is empty, I won't run any tools. I'll create structured sections like Local Dev, CI/CD, Content Structure, Theming, Plugins, and SEO. I'll include snippets for Gemfile, _config.yml, and workflows, along with notes for user/org versus project sites, along with pitfalls to avoid and guidance on navigation and layouts. I'll ensure the plans are concise and self-contained.
+**Creating concise plans**
+
+I need to keep my response under a few dozen lines while still delivering comprehensive content. The user is asking for a well-structured actionable plan with clear steps. I'll produce three plans, starting with Plan A.
+
+Plan A will be a classic GitHub Pages setup using the `github-pages` gem and only safe plugins. It will use the minima theme, which is supported by GitHub Pages. I’ll include a Gemfile specifying `gem "github-pages", group: :jekyll_plugins` and note that I can add `gem "webrick"` for Ruby 3 to ensure compatibility. The `_config.yml` will mention required plugins like `jekyll-feed` and `jekyll-sitemap`, specifying that they are auto-whitelisted when using the `github-pages` gem.
+**Outlining Jekyll plans**
+
+I see that Jekyll 4 requires Ruby 2.7+, and with Ruby 3.1+, I might need to include `webrick`. By 2025, Jekyll 4.3 may formally add this requirement. Many guides suggest adding `webrick` for Ruby >= 3. A good idea is to include `gem "webrick", "> 1.8"` to avoid complications.
+
+For Plan B, I'll suggest an actions-based build and deploy by using the direct `jekyll` gem to choose plugins. The Gemfile should include `jekyll "> 4.3.3"` and plugins like `jekyll-feed`, `jekyll-sitemap`, and `jekyll-paginate-v2`, as the original `jekyll-paginate` is deprecated. 
+
+Plan C will introduce a containerized development environment with Docker or Devcontainer while still using Actions for deployment.
+**Creating a Docker setup for Jekyll**
+
+I’ll provide a docker-compose file and a Dockerfile snippet using the official `jekyll/jekyll` image or a Ruby base. It’s essential to include volumes and port mappings, using both standard asdf paths and Docker paths.
+
+I’ll outline the repo layout, listing necessary files and a sample `_config.yml`. The minimal `index.md` alongside front matter examples for pages and posts will be included. 
+
+I'll note that minima supports navigation with header pages and uses `site.pages` for nav. Minima 2.5 also allows specifying `header_pages` in the config. 
+
+For syntax highlighting, I'll ensure to use Rouge by default and include the `jekyll-feed` plugin for the RSS/Atom feed setup. Lastly, the `jekyll-seo-tag` plugin will be addressed for Open Graph/SEO configuration in the `_includes/head.html`.
+**Formulating detailed plans**
+
+I see the minima theme already includes `seo_tag` by default if the plugin is enabled, which is helpful to note. For the sitemap and robots, I'll use the `jekyll-sitemap` plugin for `sitemap.xml`, along with a minimal `robots.txt`. Setting canonical URLs means defining `url` and `baseurl` in the config and using `rel="canonical"` via the SEO plugin.
+
+I'll address Google Analytics—minima's configuration historically supports UA properties, but I'll suggest using gtag.js for GA4 and creating an `_includes/analytics.html` to handle analytics snippets.
+
+For testing, I'll include notes on using htmlproofer, markdownlint, and establishing pre-commit hooks. I'll also propose a `.pre-commit-config.yaml`. 
+
+Then, I’ll develop three detailed plans covering aspects like repo layout, setup, local development, CI/CD, content structure, theming, plugins, SEO assets, testing, quality, extensibility, migration, pitfalls, and default recommendations. I’ll format it with clear section headers and bullet points for clarity. Each plan will be concise, providing necessary sample snippets without being too verbose. For example, **Plan 1** could cover the classic GitHub Pages setup with minimal plugins and maintenance ease, while **Plan 2** focuses on GitHub Actions build processes. 
+
+I’ll ensure that the GitHub Pages gem versions are discussed carefully, suggesting to pin by consulting their documentation for the most accurate version management.
+**Crafting self-contained plans**
+
+Alright, I’m preparing to deliver three clear plans for setting up Jekyll. Each will have defined sections like Local Dev, CI/CD, Content Structure, Theming, Plugins, SEO, and Testing. I’ll make sure to present everything concisely.
+
+First, I’ll provide an “At a glance” overview so users can quickly choose a plan. Then I’ll list **Plan 1**, **Plan 2**, and **Plan 3**, highlighting key parts with bullet points and minimal code snippets.
+
+Each plan will offer cross-platform commands, address potential pitfalls, and include an Initial Commit Checklist. I need to ensure everything is self-contained without rehashing previous content unnecessarily while staying clear and organized. Let’s write it out!
+**Structuring the Jekyll plans**
+
+I need to ensure consistent styling with headers in **Title Case** and use bullet points for key information with bold keywords. For each plan, I'll summarize sections like Repo Layout, Setup, Gemfile, _config.yml, Local Dev, CI/CD, and the specifics for Docker in Plan 3.
+
+For Plan 1, I’ll note that **Local Dev** shouldn’t use `--livereload` due to limitations in older Jekyll versions. In Plan 2, I will clarify that `--livereload` is acceptable. For Plan 3, I’ll provide essential Docker configurations using the official `jekyll/jekyll` image while ensuring clarity and minimizing complexity. Time to finalize this!
+[2025-09-12T17:30:43] codex
+**Creating concise plans**
+
+I need to keep my response under a few dozen lines while still delivering comprehensive content. The user is asking for a well-structured actionable plan with clear steps. I'll produce three plans, starting with Plan A.
+
+Plan A will be a classic GitHub Pages setup using the `github-pages` gem and only safe plugins. It will use the minima theme, which is supported by GitHub Pages. I’ll include a Gemfile specifying `gem "github-pages", group: :jekyll_plugins` and note that I can add `gem "webrick"` for Ruby 3 to ensure compatibility. The `_config.yml` will mention required plugins like `jekyll-feed` and `jekyll-sitemap`, specifying that they are auto-whitelisted when using the `github-pages` gem.
+[2025-09-12T17:30:43] codex
+**Outlining Jekyll plans**
+
+I see that Jekyll 4 requires Ruby 2.7+, and with Ruby 3.1+, I might need to include `webrick`. By 2025, Jekyll 4.3 may formally add this requirement. Many guides suggest adding `webrick` for Ruby >= 3. A good idea is to include `gem "webrick", "> 1.8"` to avoid complications.
+
+For Plan B, I'll suggest an actions-based build and deploy by using the direct `jekyll` gem to choose plugins. The Gemfile should include `jekyll "> 4.3.3"` and plugins like `jekyll-feed`, `jekyll-sitemap`, and `jekyll-paginate-v2`, as the original `jekyll-paginate` is deprecated. 
+
+Plan C will introduce a containerized development environment with Docker or Devcontainer while still using Actions for deployment.
+[2025-09-12T17:30:43] codex
+**Creating a Docker setup for Jekyll**
+
+I’ll provide a docker-compose file and a Dockerfile snippet using the official `jekyll/jekyll` image or a Ruby base. It’s essential to include volumes and port mappings, using both standard asdf paths and Docker paths.
+
+I’ll outline the repo layout, listing necessary files and a sample `_config.yml`. The minimal `index.md` alongside front matter examples for pages and posts will be included. 
+
+I'll note that minima supports navigation with header pages and uses `site.pages` for nav. Minima 2.5 also allows specifying `header_pages` in the config. 
+
+For syntax highlighting, I'll ensure to use Rouge by default and include the `jekyll-feed` plugin for the RSS/Atom feed setup. Lastly, the `jekyll-seo-tag` plugin will be addressed for Open Graph/SEO configuration in the `_includes/head.html`.
+[2025-09-12T17:30:43] codex
+**Formulating detailed plans**
+
+I see the minima theme already includes `seo_tag` by default if the plugin is enabled, which is helpful to note. For the sitemap and robots, I'll use the `jekyll-sitemap` plugin for `sitemap.xml`, along with a minimal `robots.txt`. Setting canonical URLs means defining `url` and `baseurl` in the config and using `rel="canonical"` via the SEO plugin.
+
+I'll address Google Analytics—minima's configuration historically supports UA properties, but I'll suggest using gtag.js for GA4 and creating an `_includes/analytics.html` to handle analytics snippets.
+
+For testing, I'll include notes on using htmlproofer, markdownlint, and establishing pre-commit hooks. I'll also propose a `.pre-commit-config.yaml`. 
+
+Then, I’ll develop three detailed plans covering aspects like repo layout, setup, local development, CI/CD, content structure, theming, plugins, SEO assets, testing, quality, extensibility, migration, pitfalls, and default recommendations. I’ll format it with clear section headers and bullet points for clarity. Each plan will be concise, providing necessary sample snippets without being too verbose. For example, **Plan 1** could cover the classic GitHub Pages setup with minimal plugins and maintenance ease, while **Plan 2** focuses on GitHub Actions build processes. 
+
+I’ll ensure that the GitHub Pages gem versions are discussed carefully, suggesting to pin by consulting their documentation for the most accurate version management.
+[2025-09-12T17:30:43] codex
+**Crafting self-contained plans**
+
+Alright, I’m preparing to deliver three clear plans for setting up Jekyll. Each will have defined sections like Local Dev, CI/CD, Content Structure, Theming, Plugins, SEO, and Testing. I’ll make sure to present everything concisely.
+
+First, I’ll provide an “At a glance” overview so users can quickly choose a plan. Then I’ll list **Plan 1**, **Plan 2**, and **Plan 3**, highlighting key parts with bullet points and minimal code snippets.
+
+Each plan will offer cross-platform commands, address potential pitfalls, and include an Initial Commit Checklist. I need to ensure everything is self-contained without rehashing previous content unnecessarily while staying clear and organized. Let’s write it out!
+[2025-09-12T17:30:43] codex
+**Structuring the Jekyll plans**
+
+I need to ensure consistent styling with headers in **Title Case** and use bullet points for key information with bold keywords. For each plan, I'll summarize sections like Repo Layout, Setup, Gemfile, _config.yml, Local Dev, CI/CD, and the specifics for Docker in Plan 3.
+
+For Plan 1, I’ll note that **Local Dev** shouldn’t use `--livereload` due to limitations in older Jekyll versions. In Plan 2, I will clarify that `--livereload` is acceptable. For Plan 3, I’ll provide essential Docker configurations using the official `jekyll/jekyll` image while ensuring clarity and minimizing complexity. Time to finalize this!
+Here are three self‑contained, copy‑pasteable plans you can pick from. Each includes repo layout, setup, local dev, CI/CD, content model, theming/plugins, and SEO. I recommend Plan 2 (Actions‑based) for flexibility, modern Jekyll 4+, better plugins, and PR preview deployments.
+
+---
+
+**Plan 1 — Classic GitHub Pages (no Actions)**
+
+- Summary: Easiest to maintain; uses GitHub’s built‑in Pages build with the `github-pages` gem. Limited to “safe” plugins and a slightly older Jekyll runtime. No PR previews.
+
+**Repo Layout**
+- Root: `Gemfile`, `_config.yml`, `index.md`, `.gitignore`, `README.md`
+- Content: `_posts/`, `pages/` (e.g., `about.md`)
+- Templates: `_layouts/` (optional overrides), `_includes/` (optional)
+- Assets: `assets/css/`, `assets/img/`, `assets/js/`
+- Optional: `.ruby-version`, `.editorconfig`
+
+**Setup**
+- macOS (Homebrew):
+  - `brew install ruby` (or `brew install rbenv ruby-build && rbenv install 3.3.4 && rbenv local 3.3.4`)
+  - `gem install bundler`
+- Cross‑platform (asdf):
+  - `asdf plugin add ruby`
+  - `asdf install ruby 3.3.4 && asdf global ruby 3.3.4`
+  - `gem install bundler`
+- Gemfile (track GitHub Pages runtime; pin later via versions page):
+```ruby
+source "https://rubygems.org"
+
+gem "github-pages", group: :jekyll_plugins
+# Ruby 3+ may need this in dev serve:
+gem "webrick", "~> 1.8"
+```
+- Install: `bundle install`
+
+**Local Dev**
+- Serve: `bundle exec jekyll serve` (Classic often lacks live reload; avoid `--livereload`)
+- Drafts: `bundle exec jekyll serve --drafts`
+- Build: `bundle exec jekyll build`
+
+**CI/CD (GitHub Pages built‑in)**
+- GitHub → Settings → Pages:
+  - Source: “Deploy from a branch”
+  - Branch: `main` / folder `/` (or `/docs` if you prefer)
+- Actions: not required; disable if not used.
+
+**_config.yml (baseline)**
+```yaml
+title: "Manifesto"
+description: "Ideas, notes, and essays."
+# Set for production (user site vs project site):
+url: "https://<username>.github.io"
+baseurl: "" # for project site use "/manifesto"
+
+theme: minima
+markdown: kramdown
+highlighter: rouge
+permalink: /:categories/:year/:month/:day/:title/
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+# Navigation for minima:
+header_pages:
+  - pages/about.md
+# Feed config:
+feed:
+  path: feed.xml
+```
+
+**Content Structure**
+- Posts: `_posts/2025-01-01-my-post.md` with front matter:
+```yaml
+---
+layout: post
+title: "My Post"
+description: "Short summary"
+tags: [thoughts]
+---
+```
+- Pages: `pages/about.md` with:
+```yaml
+---
+layout: page
+title: "About"
+permalink: /about/
+---
+```
+- Drafts: `_drafts/working-title.md` (serve with `--drafts`)
+- Collections (limited safely): prefer posts/pages here; collections beyond basics may be constrained.
+
+**Theming & Layouts**
+- Theme: `minima` (clean, supported by GitHub Pages)
+- Override styles: `assets/css/style.scss`:
+```scss
+---
+---
+@import "minima";
+```
+- Optional custom includes: `_includes/head.html` (adds analytics or meta), `_layouts/default.html` to override theme later.
+
+**Plugins**
+- Allowed by Pages: `jekyll-feed`, `jekyll-sitemap`, `jekyll-seo-tag`, `jekyll-paginate` (basic), etc. Avoid non‑whitelisted plugins.
+- Pagination (basic): add `jekyll-paginate` and in config:
+```yaml
+paginate: 10
+paginate_path: "/page:num/"
+```
+
+**SEO & Assets**
+- Open Graph/SEO: `{% seo %}` is included by minima when `jekyll-seo-tag` is present.
+- Sitemap: auto at `/sitemap.xml`
+- Robots: add `/robots.txt`:
+```
+User-agent: *
+Allow: /
+Sitemap: https://<username>.github.io/sitemap.xml
+```
+- Canonical: provided by `jekyll-seo-tag` (requires correct `url`/`baseurl`)
+- Analytics: minima supports `google_analytics: "G-XXXXXXX"` in `_config.yml` (GA4 OK on newer minima; otherwise include a custom `_includes/analytics.html`).
+
+**GitHub Configuration**
+- Pages: as above; no Actions needed
+- Branch protections: protect `main`, require PR review
+- PR previews: not available with classic build
+
+**Testing/Quality**
+- Markdown lint (optional, via Node): `npm i -D markdownlint-cli` and run `npx markdownlint '**/*.md'`
+- Link check (optional): `gem 'html-proofer'` and run:
+  - `bundle exec jekyll build`
+  - `bundle exec htmlproofer ./_site --check-external-hash --url-ignore "#"`
+- Dependabot: `.github/dependabot.yml` to track Ruby updates
+
+**Trade‑offs**
+- Pros: simplest, zero Actions, secure defaults
+- Cons: older Jekyll, limited plugins, no PR previews
+
+---
+
+**Plan 2 — GitHub Actions Build + Deploy (recommended default)**
+
+- Summary: Modern Jekyll 4+, flexible plugins, PR previews, deterministic builds. Slightly more setup; best long‑term path.
+
+**Repo Layout**
+- Root: `Gemfile`, `_config.yml`, `index.md`, `.gitignore`, `README.md`
+- Content/Templates/Assets: same as Plan 1
+- CI: `.github/workflows/pages.yml`
+- Optional: `.ruby-version`, `.editorconfig`
+
+**Setup**
+- macOS (Homebrew):
+  - `brew install ruby` or `brew install rben[2025-09-12T17:31:16] ERROR: stream error: stream disconnected before completion: Transport error: error decoding response body; retrying 2/5 in 382ms…
+
+[2025-09-12T17:31:22] thinking
+
+**Planning Distinct Step-by-Step Plans**
+
+I’m gearing up to offer three distinct plans with detailed components. These will include Local Development, CI/CD, Content Structure, Theming, Plugins, SEO, etc. I’ll structure the information clearly, using Title Case headers, bold keywords, and bullet points. I'll ensure examples are included, like the Gemfile, _config.yml, and GitHub Actions workflow, as well as platform-specific commands. I need to provide comprehensive plans with pitfalls while avoiding repetition from previous attempts. Let's do this!
+**Creating Step-by-Step Plans**
+
+I need to continue crafting three distinct step-by-step plans all at once. The user wants each plan self-contained and executable, which means I should avoid rehashing earlier content while still providing clarity. Minor redundancy is acceptable, as long as I don’t repeat my own words within this output. 
+
+Plan 1 is for Classic GitHub Pages, focusing on a safe plugin set with a fixed Jekyll version and a clear repository layout. 
+
+Plan 2 will detail GitHub Actions build and deployment, utilizing Jekyll 4.x and safe plugins like jekyll-feed and jekyll-sitemap.
+**Developing Comprehensive Plans**
+
+With GitHub Actions, we can utilize any plugin, but it's smart to stick with widely used ones. I'll need to include the pages.yml and outline the deployment steps for GH Pages.
+
+Plan 3 focuses on using Actions alongside Containerized Development with Docker Compose for better reproducibility. I’ll provide a Dockerfile (or use the jekyll/jekyll image) and a docker-compose.yml snippet, along with necessary commands. 
+
+I must also cover essential content structures like directory organization, pagination, SEO, and testing strategies, while mentioning potential pitfalls like baseurl issues and caching.
+**Including Build Commands and Themes**
+
+I need to provide commands for setting up macOS Homebrew and cross-platform Ruby through rbenv, asdf, or RubyInstaller, while keeping it concise. I’ll specifically recommend the Minima theme as the default, since it’s built into GitHub Pages classic builds. For Actions, I could suggest either Minima or the minimal-mistakes theme.
+
+It's important to note that the GA feature in Minima requires adding a GA4 tag, which may mean using a raw include rather than the jekyll-analytics gem for safety. Also, PR previews work differently between classic and Actions builds, which I’ll clarify.
+**Preparing Deployment Plans**
+
+I need to clarify that the "github-pages deploy" action supports previews for Pull Requests (PRs), and we can propose using ephemeral previews via actions artifact or something like Netlify. GitHub now provides "Preview" links for Pages actions as of 2023.
+
+I'll include examples mentioning how to add a `pull_request` trigger for building and deploying to the Pages preview. There are important baseurl differences based on whether it’s a project or user site. 
+
+I should pin versions, add a Gemfile, a .ruby-version, and configure a .gitignore ensuring we respectfully plan without writing files. I'll ensure concise yet complete snippets for Gemfiles and include all relevant GitHub configurations.
+[2025-09-12T17:31:53] codex
+**Creating Step-by-Step Plans**
+
+I need to continue crafting three distinct step-by-step plans all at once. The user wants each plan self-contained and executable, which means I should avoid rehashing earlier content while still providing clarity. Minor redundancy is acceptable, as long as I don’t repeat my own words within this output. 
+
+Plan 1 is for Classic GitHub Pages, focusing on a safe plugin set with a fixed Jekyll version and a clear repository layout. 
+
+Plan 2 will detail GitHub Actions build and deployment, utilizing Jekyll 4.x and safe plugins like jekyll-feed and jekyll-sitemap.
+[2025-09-12T17:31:53] codex
+**Developing Comprehensive Plans**
+
+With GitHub Actions, we can utilize any plugin, but it's smart to stick with widely used ones. I'll need to include the pages.yml and outline the deployment steps for GH Pages.
+
+Plan 3 focuses on using Actions alongside Containerized Development with Docker Compose for better reproducibility. I’ll provide a Dockerfile (or use the jekyll/jekyll image) and a docker-compose.yml snippet, along with necessary commands. 
+
+I must also cover essential content structures like directory organization, pagination, SEO, and testing strategies, while mentioning potential pitfalls like baseurl issues and caching.
+[2025-09-12T17:31:53] codex
+**Including Build Commands and Themes**
+
+I need to provide commands for setting up macOS Homebrew and cross-platform Ruby through rbenv, asdf, or RubyInstaller, while keeping it concise. I’ll specifically recommend the Minima theme as the default, since it’s built into GitHub Pages classic builds. For Actions, I could suggest either Minima or the minimal-mistakes theme.
+
+It's important to note that the GA feature in Minima requires adding a GA4 tag, which may mean using a raw include rather than the jekyll-analytics gem for safety. Also, PR previews work differently between classic and Actions builds, which I’ll clarify.
+[2025-09-12T17:31:53] codex
+**Preparing Deployment Plans**
+
+I need to clarify that the "github-pages deploy" action supports previews for Pull Requests (PRs), and we can propose using ephemeral previews via actions artifact or something like Netlify. GitHub now provides "Preview" links for Pages actions as of 2023.
+
+I'll include examples mentioning how to add a `pull_request` trigger for building and deploying to the Pages preview. There are important baseurl differences based on whether it’s a project or user site. 
+
+I should pin versions, add a Gemfile, a .ruby-version, and configure a .gitignore ensuring we respectfully plan without writing files. I'll ensure concise yet complete snippets for Gemfiles and include all relevant GitHub configurations.
+Here are three complete, ready-to-execute plans. Each includes repo layout, setup, local dev, CI/CD, content structure, theming, plugins, SEO, testing, and extensibility. I recommend Plan 2 as the default.
+
+---
+
+**Plan 1 — Classic GitHub Pages (github-pages gem)**
+
+- Summary: Uses GitHub Pages’ built-in “static” build with the `github-pages` gem. Easiest to maintain, but limited to the Pages safelist and an older Jekyll.
+
+**Repo Layout**
+- Root: `Gemfile`, `_config.yml`, `index.md`, `.gitignore`, `README.md`
+- Structure: `_posts/`, `pages/`, `_layouts/`, `_includes/`, `assets/{css,img,js}/`
+- Optional: `.ruby-version` (e.g., 3.3.4), `.editorconfig`, `.github/dependabot.yml`
+
+**Setup**
+- macOS (Homebrew):
+  - `brew install ruby rbenv` (or just `ruby`; using rbenv/asdf improves reproducibility)
+  - `rbenv install 3.3.4 && rbenv local 3.3.4`
+  - `gem install bundler`
+- Cross‑platform (asdf):
+  - `asdf plugin add ruby`
+  - `asdf install ruby 3.3.4 && asdf local ruby 3.3.4`
+  - `gem install bundler`
+- Initialize:
+  - `bundle init` then replace Gemfile per below
+  - `bundle install`
+
+```ruby
+# Gemfile (Plan 1 - Classic Pages)
+source "https://rubygems.org"
+
+# Lock to GitHub Pages managed stack (pins Jekyll, plugins)
+gem "github-pages", group: :jekyll_plugins
+```
+
+```yaml
+# _config.yml (Plan 1)
+title: "manifesto"
+description: "A minimal Jekyll site"
+# For user/organization site:
+url: "https://USERNAME.github.io"
+baseurl: ""  # project site: "/manifesto"
+theme: minima
+
+# Only use safelisted plugins with github-pages
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+markdown: kramdown
+permalink: /:categories/:year/:month/:day/:title/
+```
+
+**Local Dev**
+- Install/run:
+  - `bundle install`
+  - `bundle exec jekyll serve` (livereload may not be available with the older stack)
+
+**CI/CD (Classic Pages)**
+- GitHub → Settings → Pages:
+  - Source: `Deploy from a branch`
+  - Branch: `main`, Folder: `/ (root)`
+- No Actions needed; GitHub Pages builds on push.
+- For project sites, set Pages to serve `/` from `main`, and ensure `baseurl` is `/manifesto`.
+
+**GitHub Configuration**
+- Branch protection: require PRs and checks (if you add link checks).
+- Actions permissions: not required for classic build.
+- PR previews: not supported in classic mode (trade‑off).
+
+**Content Structure**
+- `_posts/` with filenames `YYYY-MM-DD-title.md`
+- `pages/about.md` for static pages
+- `index.md` for home; `_layouts/default.html`, `_layouts/post.html`
+- Front matter example:
+```yaml
+---
+layout: post
+title: "My First Post"
+date: 2025-01-01 10:00:00 +0000
+categories: [notes]
+tags: [intro]
+---
+```
+- Drafts: `_drafts/` and `bundle exec jekyll serve --drafts`
+- Collections: define under `collections:` in `_config.yml`
+- Pagination: `jekyll-paginate` (works with classic)
+
+**Navigation and Layouts**
+- Minimal nav in `_includes/header.html`; include in `default.html`
+- Syntax highlighting via Rouge (bundled)
+- RSS/Atom via `jekyll-feed` (adds `/feed.xml`)
+
+**Assets and SEO**
+- `assets/` for CSS/JS/images. Add `assets/css/style.scss` to override `minima`.
+- SEO: `jekyll-seo-tag` in `<head>`, `jekyll-sitemap` creates `/sitemap.xml`
+- Robots: create `/robots.txt` (static)
+- Canonical URLs via `seo_tag`
+- Analytics: Minima supports `google_analytics:` (for GA4, prefer adding a small `_includes/analytics.html` with your gtag snippet and include it in the head)
+
+**Testing/Quality**
+- Link check (optional): add `html-proofer` to Gemfile for local:
+```ruby
+group :development do
+  gem "html-proofer", "~> 5.0"
+end
+```
+- Run after `bundle exec jekyll build`:
+  - `bundle exec htmlproofer ./_site --check-html --allow-hash-href`
+- Markdown lint: add `.markdownlint.json` and run `npx markdownlint-cli .`
+- Dependabot for Ruby: `.github/dependabot.yml`
+
+**Extensibility**
+- Themes: switch `theme:` or vendor theme files
+- Collections: add under `_my_collection/` and `_config.yml`
+- i18n: keep content per locale collection or use data files
+- Drafts and pagination: use `jekyll-paginate` only (v2 not allowed here)
+
+**Trade‑offs**
+- Pros: simplest, zero Actions maintenance, secure defaults
+- Cons: older Jekyll, limited plugins, no PR previews
+
+---
+
+**Plan 2 — GitHub Actions Build + Deploy (recommended default)**
+
+- Summary: Modern Jekyll 4+, flexible plugins, PR previews, deterministic builds. Slightly more setup; best long‑term path.
+
+**Repo Layout**
+- Root: `Gemfile`, `_config.yml`, `index.md`, `.gitignore`, `README.md`
+- Content/templates/assets same as Plan 1
+- CI: `.github/workflows/pages.yml`
+- Optional: `.ruby-version`, `.editorconfig`
+
+**Setup**
+- macOS (Homebrew):
+  - `brew install ruby rbenv`
+  - `rbenv install 3.3.4 && rbenv local 3.3.4`
+  - `gem install bundler`
+- Cross‑platform (asdf):
+  - `asdf plugin add ruby`
+  - `asdf install ruby 3.3.4 && asdf local ruby 3.3.4`
+  - `gem install bundler`
+- Initialize:
+  - `bundle init` then use Gemfile below
+  - `bundle install`
+
+```ruby
+# Gemfile (Plan 2 - Actions)
+source "https://rubygems.org"
+
+ruby "3.3.4" # optional but recommended
+
+gem "jekyll", "~> 4.3.3"
+gem "minima", "~> 2.5"
+
+# Safe + common plugins
+group :jekyll_plugins do
+  gem "jekyll-feed", "~> 0.17"
+  gem "jekyll-sitemap", "~> 1.4"
+  gem "jekyll-seo-tag", "~> 2.8"
+  gem "jekyll-paginate", "~> 1.1" # simple pagination
+  # Optional (Actions allows non-safelisted):
+  # gem "jekyll-paginate-v2", "~> 3.0"
+end
+
+group :development do
+  gem "webrick", "~> 1.8" # needed on some Ruby/Jekyll combos
+  gem "html-proofer", "~> 5.0"
+end
+```
+
+```yaml
+# _config.yml (Plan 2)
+title: "manifesto"
+description: "A minimal Jekyll site"
+url: "https://USERNAME.github.io"
+baseurl: ""     # project site: "/manifesto"
+theme: minima
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-paginate
+markdown: kramdown
+permalink: /:categories/:year/:month/:day/:title/
+
+paginate: 10
+paginate_path: "/page:num/"
+# For paginate-v2 (if used), replace the above with:
+# pagination:
+#   enabled: true
+#   per_page: 10
+#   title: ":title • Page :num"
+```
+
+**Local Dev**
+- Install/run:
+  - `bundle install`
+  - `bundle exec jekyll serve --livereload`
+- Drafts: `bundle exec jekyll serve --livereload --drafts`
+- Project site testing: run with `--baseurl ""` locally if you’ve set `/manifesto` in config to simulate root
+
+**CI/CD (Actions Pages)**
+- GitHub → Settings → Pages → Build and deployment → Source: `GitHub Actions`
+- Add workflow `.github/workflows/pages.yml`:
+
+```yaml
+name: Deploy Jekyll to Pages
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+  pull_request:
+    branches: [ "main" ] # builds previews
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+      - name: Build with Jekyll
+        run: bundle exec jekyll build --trace
+        env:
+          JEKYLL_ENV: production
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+- PR preview: GitHub will attach a Pages deployment to PRs (baseurl may differ; avoid absolute links).
+- Caching: `bundler-cache: true` is sufficient; you can add `.jekyll-cache` if builds are large.
+
+**GitHub Configuration**
+- Branch protection: require status checks (build job) and PR review
+- Actions permissions: allow GitHub Pages deployment
+- Environment: `github-pages` created automatically by `deploy-pages`
+
+**Content Structure**
+- Same as Plan 1; add `pages/` and `_posts/` with front matter
+- Collections (example):
+```yaml
+collections:
+  essays:
+    output: true
+    permalink: /essays/:title/
+```
+- Create `_essays/first.md` with `layout: default`
+- Drafts: `_drafts/`
+
+**Navigation and Layouts**
+- Minimal nav via `_includes/header.html`; reference `site.pages | where_exp` for listing
+- Index with blog listing using pagination:
+```liquid
+---
+layout: default
+title: Home
+---
+
+<h1>{{ site.title }}</h1>
+{% for post in paginator.posts %}
+  <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+  <small>{{ post.date | date_to_string }}</small>
+  <p>{{ post.excerpt }}</p>
+{% endfor %}
+
+<nav>
+  {% if paginator.previous_page %}
+    <a href="{{ paginator.previous_page_path | relative_url }}">Newer</a>
+  {% endif %}
+  {% if paginator.next_page %}
+    <a href="{{ paginator.next_page_path | relative_url }}">Older</a>
+  {% endif %}
+</nav>
+```
+
+**Assets and SEO**
+- Add in `default.html` head:
+```liquid
+{% seo %}
+<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+<link rel="icon" href="{{ '/assets/img/favicon.png' | relative_url }}">
+```
+- GA4 snippet in `_includes/analytics.html` and include it via head to avoid plugin lock-in
+- Open Graph/Twitter handled by `jekyll-seo-tag` (set `title`, `description`, `image:` in front matter as needed)
+
+**Testing/Quality**
+- Link check in CI (optional separate job):
+```yaml
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with: { ruby-version: '3.3', bundler-cache: true }
+      - run: bundle exec jekyll build
+      - run: bundle exec htmlproofer ./_site --check-html --allow-hash-href
+```
+- Markdown lint: add `markdownlint-cli` via `node` or `docker` action
+- Dependabot:
+```yaml
+# .github/dependabot.yml
+version: 2
+updates:
+  - package-ecosystem: "bundler"
+    directory: "/"
+    schedule: { interval: "daily" }
+```
+
+**Extensibility**
+- Free to use additional plugins (e.g., `jekyll-include-cache`, `jekyll-archives`, `jekyll-paginate-v2`)
+- Data files: `_data/*.yml` and iterate with Liquid
+- i18n: collections per locale or plugins (Actions allows it)
+- Drafts, pagination, collections: fully supported
+
+**Trade‑offs**
+- Pros: latest Jekyll, full plugin freedom, PR previews, reproducible builds
+- Cons: maintain an Actions workflow; slightly more initial setup
+
+---
+
+**Plan 3 — Actions + Containerized Dev (Docker)**
+
+- Summary: Same as Plan 2 for CI/CD, but local dev uses Docker/Compose for consistent Ruby/Jekyll across machines.
+
+**Repo Layout**
+- Same as Plan 2 plus `docker-compose.yml` (or a simple `Dockerfile`)
+
+**Setup**
+- Docker Desktop installed
+- Keep Gemfile identical to Plan 2
+- Add `docker-compose.yml`:
+```yaml
+services:
+  jekyll:
+    image: jekyll/jekyll:4
+    command: jekyll serve --livereload --watch --force_polling --host 0.0.0.0
+    ports:
+      - "4000:4000"
+      - "35729:35729"
+    volumes:
+      - ./:/srv/jekyll
+    environment:
+      JEKYLL_ENV: development
+```
+- First-time install/build inside container:
+  - `docker compose run --rm jekyll bundle install`
+
+**Local Dev**
+- Start server:
+  - `docker compose up` (serves http://localhost:4000 with live reload)
+- Drafts:
+  - `docker compose run --rm jekyll jekyll serve --drafts --livereload --host 0.0.0.0 -P 4000`
+- Build:
+  - `docker compose run --rm jekyll jekyll build`
+
+**CI/CD**
+- Use the same Actions workflow from Plan 2 (`pages.yml`).
+- Optional cache for `.jekyll-cache`:
+```yaml
+      - uses: actions/cache@v4
+        with:
+          path: .jekyll-cache
+          key: jekyll-${{ runner.os }}-${{ hashFiles('**/*.md','**/*.html','**/*.scss','_config.yml','Gemfile.lock') }}
+          restore-keys: jekyll-${{ runner.os }}-
+```
+
+**GitHub Configuration**
+- Same as Plan 2: Pages → GitHub Actions; branch protection and PR previews
+
+**Content Structure, Theming, Plugins, SEO**
+- Same as Plan 2 (Minima, `jekyll-feed`, `jekyll-sitemap`, `jekyll-seo-tag`; optional extra plugins)
+
+**Testing/Quality**
+- Run checks inside Docker for parity:
+  - `docker compose run --rm jekyll jekyll build`
+  - `docker compose run --rm jekyll htmlproofer ./_site --check-html --allow-hash-href`
+- Markdown lint: `docker run --rm -v "$PWD:/work" -w /work node:20 npx markdownlint-cli .`
+
+**Extensibility**
+- Pin the `jekyll/jekyll` tag or create a `Dockerfile` that installs your pinned Ruby/Jekyll versions for full reproducibility.
+
+**Trade‑offs**
+- Pros: identical environments, easy onboarding
+- Cons: Docker overhead on macOS/Windows; slightly slower file I/O
+
+---
+
+**Common Pieces**
+
+**.gitignore**
+```
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+vendor/
+.DS_Store
+```
+
+**Minimal `index.md`**
+```markdown
+---
+layout: default
+title: Home
+---
+
+Welcome to {{ site.title }}.
+```
+
+**Minimal Layouts**
+- `_layouts/default.html`:
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ page.title }} | {{ site.title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% seo %}
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+<body>
+  {% include header.html %}
+  <main class="container">{{ content }}</main>
+  {% include footer.html %}
+</body>
+</html>
+```
+- `_layouts/post.html`:
+```html
+---
+layout: default
+---
+<article>
+  <h1>{{ page.title }}</h1>
+  <p><small>{{ page.date | date_to_long_string }}</small></p>
+  {{ content }}
+</article>
+```
+
+**Navigation Include `_includes/header.html`**
+```html
+<header>
+  <nav>
+    <a href="{{ '/' | relative_url }}">Home</a>
+    <a href="{{ '/pages/about' | relative_url }}">About</a>
+  </nav>
+</header>
+```
+
+**SEO/Feed**
+- In head: `{% seo %}`
+-[2025-09-12T17:33:49] ERROR: stream error: stream disconnected before completion: Transport error: error decoding response body; retrying 3/5 in 817ms…
+
+[2025-09-12T17:34:15] thinking
+
+**Considering Jekyll plugins for GitHub Pages**
+
+I’m checking on plugins like jekyll-feed, jekyll-sitemap, and jekyll-seo-tag to ensure they’re safe for use with GitHub Pages. They are on the safe list! I need to keep in mind that the classic version of Pages uses the github-pages gem, which points to Jekyll 3.9.x. It's unclear if Jekyll 4 is supported, but I’m planning for two approaches: one using github-pages gem and another with GitHub Actions for Jekyll 4.3.x, ensuring version pinning is in place.
+**Evaluating Jekyll setup options**
+
+I’m considering trade-offs for features like jekyll-archives and deciding whether to include jekyll-paginate or its v2 in Plans 2 and 3. For local development, I need to mention bundler and provide Ruby installation guidance, like using Homebrew to install ruby and adjusting the PATH. I could also give alternatives with rbenv or asdf, detailing the steps for either. Lastly, I should outline CI/CD options, comparing a classic setup with GitHub Actions to manage deployment efficiently.
+**Clarifying GitHub Pages setup**
+
+I need to clarify the differences between project and user sites on GitHub Pages. For user sites, baseurl should be blank, while for project sites, it should point to `/manifesto`. I’ll also mention using `relative_url` and `absolute_url` filters. For testing and quality, tools like htmlproofer and markdownlint are essential, along with a CI job for linting and checks. Additionally, I can discuss integrating analytics, generating a Robots.txt, managing canonical URLs, and configuring caching with Bundler and Jekyll. Drafts and pagination strategies, including jekyll-paginate and jekyll-paginate-v2, will also be part of my guidance.
+**Outlining migration plans for Markdown docs**
+
+I’m working on migrating existing Markdown documents, and I'll create pages with front matter, convert filenames, move images, and update links to be relative or utilize site.baseurl with permalinks. I need to lay this out in three distinct plans while avoiding verbosity. 
+
+First, I'll include a quick intro summarizing the plans, with a recommendation for Plan 2. Each plan will have sections with headers, with each bullet point featuring a bold keyword. I'll provide helpful code snippets, like for the Gemfile and _config.yml, but I want to ensure I’m not overly repetitive.
+**Creating Migration Plans for Markdown Docs**
+
+I’ll outline three comprehensive plans for migrating existing Markdown documents. Each plan will include:
+
+- Summary
+- Repo Layout
+- Setup
+- Gemfile
+- _config.yml
+- Local Dev
+- Publishing
+- GitHub Config
+- Content Structure
+- Navigation and Layouts
+- SEO and Assets
+- Testing and Quality
+- Extensibility
+- Migration
+
+For the Gemfile, I’ll include Ruby version 3.3.3. Plans will vary regarding gems, with safety considerations for plugins like jekyll-feed, jekyll-sitemap, and jekyll-seo-tag. I need to clearly handle pagination, navigation configurations, SEO elements, testing tools, and describe Docker setup. Each section will follow precise formatting while avoiding redundancy. I’ll finalize the plans step by step.
+[2025-09-12T17:35:10] codex
+**Evaluating Jekyll setup options**
+
+I’m considering trade-offs for features like jekyll-archives and deciding whether to include jekyll-paginate or its v2 in Plans 2 and 3. For local development, I need to mention bundler and provide Ruby installation guidance, like using Homebrew to install ruby and adjusting the PATH. I could also give alternatives with rbenv or asdf, detailing the steps for either. Lastly, I should outline CI/CD options, comparing a classic setup with GitHub Actions to manage deployment efficiently.
+[2025-09-12T17:35:10] codex
+**Clarifying GitHub Pages setup**
+
+I need to clarify the differences between project and user sites on GitHub Pages. For user sites, baseurl should be blank, while for project sites, it should point to `/manifesto`. I’ll also mention using `relative_url` and `absolute_url` filters. For testing and quality, tools like htmlproofer and markdownlint are essential, along with a CI job for linting and checks. Additionally, I can discuss integrating analytics, generating a Robots.txt, managing canonical URLs, and configuring caching with Bundler and Jekyll. Drafts and pagination strategies, including jekyll-paginate and jekyll-paginate-v2, will also be part of my guidance.
+[2025-09-12T17:35:10] codex
+**Outlining migration plans for Markdown docs**
+
+I’m working on migrating existing Markdown documents, and I'll create pages with front matter, convert filenames, move images, and update links to be relative or utilize site.baseurl with permalinks. I need to lay this out in three distinct plans while avoiding verbosity. 
+
+First, I'll include a quick intro summarizing the plans, with a recommendation for Plan 2. Each plan will have sections with headers, with each bullet point featuring a bold keyword. I'll provide helpful code snippets, like for the Gemfile and _config.yml, but I want to ensure I’m not overly repetitive.
+[2025-09-12T17:35:10] codex
+**Creating Migration Plans for Markdown Docs**
+
+I’ll outline three comprehensive plans for migrating existing Markdown documents. Each plan will include:
+
+- Summary
+- Repo Layout
+- Setup
+- Gemfile
+- _config.yml
+- Local Dev
+- Publishing
+- GitHub Config
+- Content Structure
+- Navigation and Layouts
+- SEO and Assets
+- Testing and Quality
+- Extensibility
+- Migration
+
+For the Gemfile, I’ll include Ruby version 3.3.3. Plans will vary regarding gems, with safety considerations for plugins like jekyll-feed, jekyll-sitemap, and jekyll-seo-tag. I need to clearly handle pagination, navigation configurations, SEO elements, testing tools, and describe Docker setup. Each section will follow precise formatting while avoiding redundancy. I’ll finalize the plans step by step.
+Below are three complete, ready‑to‑execute plans. All assume a new public repo named “manifesto” and macOS with Homebrew available. Plan 2 (Actions‑based) is the recommended default.
+
+---
+
+**Plan 1 — Classic GitHub Pages (github-pages gem)**
+
+- Summary: Zero‑maintenance hosting via GitHub Pages’ built‑in Jekyll build. Simplest path; limited plugins and older Jekyll.
+
+**Repo Layout**
+- Root: `Gemfile`, `_config.yml`, `index.md`, `.gitignore`, `README.md`
+- Content: `_posts/`, `pages/` (e.g., `about.md`)
+- Theme/Includes (optional overrides): `_layouts/`, `_includes/`
+- Assets: `assets/css/`, `assets/img/`, `assets/js/`
+- Optional: `.ruby-version`, `.editorconfig`
+
+**Setup**
+- macOS (Homebrew):
+  - `brew install rbenv ruby-build`
+  - `rbenv install 3.3.3 && rbenv local 3.3.3`
+  - `gem install bundler`
+- Cross‑platform (asdf):
+  - `asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git`
+  - `asdf install ruby 3.3.3 && asdf local ruby 3.3.3`
+  - `gem install bundler`
+
+**Gemfile**
+```ruby
+source "https://rubygems.org"
+
+# Use the Pages-supported stack (pins Jekyll/plugins on GitHub’s side)
+gem "github-pages", group: :jekyll_plugins
+
+# Optional dev/test tools (run locally or in a separate CI job)
+group :test do
+  gem "html-proofer", "~> 5.0"
+end
+```
+- Note: Do not pin a version for `github-pages`; GitHub sets compatible versions.
+
+**_config.yml (minimal)**
+```yaml
+title: Manifesto
+description: Personal/public site
+url: https://USERNAME.github.io
+baseurl: ""       # user/organization site => "", project site => "/manifesto"
+theme: minima
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+markdown: kramdown
+kramdown:
+  input: GFM
+permalink: /:categories/:year/:month/:day/:title/
+highlighter: rouge
+
+# Simple nav with Minima:
+header_pages:
+  - pages/about.md
+```
+
+**Local Dev**
+- `bundle install`
+- `bundle exec jekyll serve` (Minima on classic may not support `--livereload`; if it errors, omit)
+
+**Publishing**
+- Push to GitHub main.
+- In repo Settings → Pages:
+  - Source: “Deploy from a branch”
+  - Branch: `main`, folder: `/ (root)` (or `/docs` if you prefer a `docs/` root)
+- Pages builds automatically using the `github-pages` gem.
+
+**GitHub Configuration**
+- Pages: set source/branch/path per above.
+- Branch protection: require PR review; optionally require “GitHub Pages” check to pass.
+- Actions: not required for deployment; can still use for lint/tests with separate workflow.
+- PR previews: not available with classic Pages (no ephemeral preview URLs).
+
+**Content Structure**
+- Posts: `_posts/YYYY-MM-DD-slug.md`
+- Pages: `pages/*.md` (e.g., `pages/about.md`)
+- Front matter example:
+```yaml
+---
+layout: post
+title: Why This Manifesto
+description: A short introduction to the site's purpose
+tags: [manifesto, intro]
+---
+```
+- Drafts: `_drafts/*.md`; local preview with `bundle exec jekyll serve --drafts`
+- Collections (classic-safe): use `_collectionname/` with `output: true` in `_config.yml`
+
+**Navigation and Layouts**
+- Use Minima defaults; add `header_pages` in `_config.yml`.
+- Override layouts if needed:
+  - `_layouts/default.html` includes `{% seo %}` and `{{ content }}`
+  - `_layouts/post.html` adds title/date around `{{ content }}`
+
+**Assets and SEO**
+- SEO/OG/Twitter: `jekyll-seo-tag` + `{% seo %}` in `<head>`.
+- Feed: `jekyll-feed` exposes `/feed.xml`.
+- Sitemap: `jekyll-sitemap` exposes `/sitemap.xml`.
+- Robots: add `robots.txt` at root if needed (Pages is indexable by default).
+- Analytics: Minima supports `google_analytics:` in `_config.yml` (for GA4, include a `gtag.js` snippet in `_includes/head.html` instead).
+
+**Testing/Quality**
+- Links: `bundle exec jekyll build && bundle exec htmlproofer ./_site --check-external-hash`
+- Markdown lint (optional): use `markdownlint-cli2` via Node in a separate workflow.
+
+**Extensibility**
+- Plugins: limited to Pages safe‑list (already covered).
+- Pagination: classic uses `jekyll-paginate` (basic pagination only).
+- i18n: limited (community plugins usually not safe); consider Plan 2/3 for more.
+
+**Migration**
+- Move `.md` docs into `pages/` or `_posts/` and add front matter.
+- Fix absolute links; prefer `{{ '/path' | relative_url }}` and `{{ '/path' | absolute_url }}`.
+- For project sites, set `baseurl: "/manifesto"` and use `relative_url`.
+
+**Trade‑offs**
+- Pros: simplest, no Actions, secure defaults.
+- Cons: older Jekyll, limited plugins, no PR preview URLs.
+
+---
+
+**Plan 2 — GitHub Actions Build + Deploy (recommended)**
+
+- Summary: Modern Jekyll 4+, broader plugin ecosystem, PR previews, deterministic builds. Slightly more setup.
+
+**Repo Layout**
+- Root: `Gemfile`, `_config.yml`, `index.md`, `.gitignore`, `README.md`
+- Site: `_posts/`, `pages/`, `_layouts/`, `_includes/`, `assets/`
+- CI: `.github/workflows/pages.yml`
+- Optional: `.ruby-version` (3.3.3), `.editorconfig`, `.markdownlint.json`, `.github/dependabot.yml`
+
+**Setup**
+- macOS (Homebrew):
+  - `brew install rbenv ruby-build`
+  - `rbenv install 3.3.3 && rbenv local 3.3.3`
+  - `gem install bundler`
+- Cross‑platform (asdf):
+  - `asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git`
+  - `asdf install ruby 3.3.3 && asdf local ruby 3.3.3`
+  - `gem install bundler`
+
+**Gemfile**
+```ruby
+source "https://rubygems.org"
+ruby "3.3.3"
+
+gem "jekyll", "~> 4.3.3"
+
+group :jekyll_plugins do
+  gem "jekyll-seo-tag", "~> 2.8"
+  gem "jekyll-sitemap", "~> 1.4"
+  gem "jekyll-feed", "~> 0.17"
+  # Advanced (Actions-only):
+  gem "jekyll-paginate-v2", "~> 3.0"
+end
+
+group :test do
+  gem "html-proofer", "~> 5.0"
+end
+```
+
+**_config.yml (baseline)**
+```yaml
+title: Manifesto
+description: Personal/public site
+url: https://USERNAME.github.io
+baseurl: ""                 # user site => "", project site => "/manifesto"
+theme: minima
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-paginate-v2
+
+markdown: kramdown
+kramdown:
+  input: GFM
+permalink: /:year/:month/:day/:title/
+highlighter: rouge
+
+# Minima nav
+header_pages:
+  - pages/about.md
+
+# Pagination (jekyll-paginate-v2)
+pagination:
+  enabled: true
+  per_page: 10
+  title: ":title - page :num"
+  trail:
+    before: 2
+    after: 2
+```
+
+**Local Dev**
+- `bundle install`
+- `bundle exec jekyll serve --livereload`
+- Drafts: `bundle exec jekyll serve --livereload --drafts`
+
+**CI/CD (Pages via Actions)**
+- `.github/workflows/pages.yml`
+```yaml
+name: Build and Deploy Pages
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+
+      - name: Install
+        run: bundle install --jobs 4 --retry 3
+
+      - name: Build
+        run: bundle exec jekyll build --trace --strict_front_matter
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    if: github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+```
+- PRs: build runs and exposes a Pages “Preview” URL in the PR UI (no production deploy on PRs).
+
+**GitHub Configuration**
+- Settings → Pages: “GitHub Actions” as the source.
+- Branch protection: require “Build and Deploy Pages / build” to pass before merging.
+- Actions permissions: allow GitHub Pages deployment (pages+id‑token scopes set above).
+- PR previews: enabled automatically by the workflow.
+
+**Content Structure**
+- Posts/Pages/Drafts: same as Plan 1.
+- Collections: more options unlocked; e.g.:
+```yaml
+collections:
+  essays:
+    output: true
+    permalink: /essays/:title/
+defaults:
+  - scope: { path: "", type: "posts" }
+    values: { layout: post }
+  - scope: { path: "", type: "essays" }
+    values: { layout: page }
+```
+
+**Navigation and Layouts**
+- Minimal nav: `header_pages:` in `_config.yml`.
+- Index list with pagination (`index.md` front matter):
+```yaml
+---
+layout: home
+pagination:
+  enabled: true
+---
+```
+- Syntax highlighting: Rouge (default); choose a CSS theme or use Minima defaults.
+
+**Assets and SEO**
+- Head include[2025-09-12T17:36:22] ERROR: stream error: stream disconnected before completion: Transport error: error decoding response body; retrying 4/5 in 1.446s…
+
+[2025-09-12T17:36:31] thinking
+
+**Planning distinct execution plans**
+
+I'm focusing on producing three distinct plans for the user, making sure they're self-contained and ready to go. Each plan will include trade-offs and a recommended default path.
+
+I have to ensure that key snippets for critical files like the Gemfile, _config.yml, and commands for macOS and cross-platform use are present. The overarching structure will involve a repo layout, setup steps, local development workflow, and publishing options. I won't repeat previous ideas, just keep moving forward to present complete plans in a coherent way!
+**Developing detailed plans**
+
+I'm formulating three distinct plans: #1 for classic GitHub Pages, #2 for Actions, and #3 for Actions combined with a container for reproducibility.
+
+Each plan will cover GitHub configuration, content models, navigation layouts, asset management, SEO, testing quality, extensibility, and migration guidance. I also plan to include explicit commands for macOS and cross-platform, as well as examples of pinned Gemfile configurations. 
+
+For classic GitHub Pages, I'll mention Jekyll plugin limitations and propose using the minima theme due to its compatibility. I'll recommend Plan 2 (Actions) as the default strategy.
+**Detailing optional reproducible container plan**
+
+I'm formulating Plan 3, which centers on an optional reproducible container for development that maintains CI along the actions path. 
+
+This plan will outline the pages workflow, including token permissions and the steps for upload/deploy. I’ll also provide details for PR previews and environment settings.
+
+I plan to include important files like .gitignore and .ruby-version, along with potential pitfalls, such as baseurl differences and local versus production URL settings, while keeping it concise.
+
+I'll ensure minimal snippets for `_includes/head.html` are included for SEO references without being overly verbose.
+**Finalizing complete plans**
+
+I’m working on finalizing the complete plans while minimizing duplication. Each plan needs to be self-contained. 
+
+I’ll structure the final answer with bold headers and keywords complemented by bullet points, and I'll include brief code blocks for files like the Gemfile, _config.yml, and workflow setups. 
+
+I also need to show commands for macOS using brew and cross-platform options like rbenv or asdf. For plugins, I’ll include the safe options from GitHub Pages, making sure to clarify the status of jekyll-paginate as compared to jekyll-paginate-v2.
+**Crafting detailed plans**
+
+For the classic plan, I can include jekyll-paginate (legacy) with noted limitations, while the Actions plan can use jekyll-paginate-v2. I’ll also need to mention using kramdown as the Markdown engine with its settings.
+
+Permalink styles could include variations like '/:categories/:year/:month/:day/:title/' or simpler formats. For drafts, I should specify the `_drafts` folder and serving locally with `--drafts`.
+
+Link checking with html-proofer and markdownlint config samples will be included, alongside a CI job for quality checks. I’ll wrap up by detailing theme selection, Google Analytics configurations, and provide a thorough plan breakdown across the three distinct plans without running any tools.
+[2025-09-12T17:37:01] codex
+**Developing detailed plans**
+
+I'm formulating three distinct plans: #1 for classic GitHub Pages, #2 for Actions, and #3 for Actions combined with a container for reproducibility.
+
+Each plan will cover GitHub configuration, content models, navigation layouts, asset management, SEO, testing quality, extensibility, and migration guidance. I also plan to include explicit commands for macOS and cross-platform, as well as examples of pinned Gemfile configurations. 
+
+For classic GitHub Pages, I'll mention Jekyll plugin limitations and propose using the minima theme due to its compatibility. I'll recommend Plan 2 (Actions) as the default strategy.
+[2025-09-12T17:37:01] codex
+**Detailing optional reproducible container plan**
+
+I'm formulating Plan 3, which centers on an optional reproducible container for development that maintains CI along the actions path. 
+
+This plan will outline the pages workflow, including token permissions and the steps for upload/deploy. I’ll also provide details for PR previews and environment settings.
+
+I plan to include important files like .gitignore and .ruby-version, along with potential pitfalls, such as baseurl differences and local versus production URL settings, while keeping it concise.
+
+I'll ensure minimal snippets for `_includes/head.html` are included for SEO references without being overly verbose.
+[2025-09-12T17:37:01] codex
+**Finalizing complete plans**
+
+I’m working on finalizing the complete plans while minimizing duplication. Each plan needs to be self-contained. 
+
+I’ll structure the final answer with bold headers and keywords complemented by bullet points, and I'll include brief code blocks for files like the Gemfile, _config.yml, and workflow setups. 
+
+I also need to show commands for macOS using brew and cross-platform options like rbenv or asdf. For plugins, I’ll include the safe options from GitHub Pages, making sure to clarify the status of jekyll-paginate as compared to jekyll-paginate-v2.
+[2025-09-12T17:37:01] codex
+**Crafting detailed plans**
+
+For the classic plan, I can include jekyll-paginate (legacy) with noted limitations, while the Actions plan can use jekyll-paginate-v2. I’ll also need to mention using kramdown as the Markdown engine with its settings.
+
+Permalink styles could include variations like '/:categories/:year/:month/:day/:title/' or simpler formats. For drafts, I should specify the `_drafts` folder and serving locally with `--drafts`.
+
+Link checking with html-proofer and markdownlint config samples will be included, alongside a CI job for quality checks. I’ll wrap up by detailing theme selection, Google Analytics configurations, and provide a thorough plan breakdown across the three distinct plans without running any tools.
+Here are three self‑contained, ready‑to‑execute plans for a clean, minimal Jekyll + GitHub Pages site named “manifesto”. Each plan includes repo layout, setup, local dev, CI/CD, content model, theming, plugins, SEO, testing, extensibility, and migration notes. Plan 2 (GitHub Actions) is the recommended default.
+
+Plan 1 — Classic GitHub Pages (github-pages gem)
+- Summary: Uses GitHub’s built‑in Pages build with the `github-pages` gem. Easiest to host; limited plugins and older Jekyll. Good if you want zero Actions.
+- Trade‑offs
+  - Pros: simplest hosting, secure defaults, minimal maintenance.
+  - Cons: older Jekyll (3.9.x), limited plugin set, no PR preview environments, legacy pagination.
+- Repo Layout
+  - Root: `Gemfile`, `_config.yml`, `index.md`, `.gitignore`, `README.md`, optional `.ruby-version`, `.editorconfig`
+  - Content: `_posts/`, `pages/` (e.g., `about.md`), `_layouts/`, `_includes/`, `assets/{css,img,js}/`
+- Setup
+  - macOS (Homebrew): 
+    - `brew install ruby` (or `brew install rbenv && rbenv install 3.3.3 && rbenv global 3.3.3`)
+    - `gem install bundler`
+  - Cross‑platform: use `rbenv` or `asdf` to install Ruby 3.3.x; then `gem install bundler`
+- Gemfile (classic build)
+```ruby
+source "https://rubygems.org"
+ruby "3.3.3"
+gem "github-pages", group: :jekyll_plugins  # pins Jekyll 3.9.x + safe plugins
+# Optional dev/test tools (local only; not used by Pages):
+# gem "html-proofer", group: :development
+```
+- _config.yml (minimal baseline)
+```yaml
+title: Manifesto
+description: Personal site
+url: https://<username>.github.io
+baseurl: "" # for user/org site; for project: "/manifesto"
+theme: minima
+permalink: /:categories/:year/:month/:day/:title/
+markdown: kramdown
+kramdown:
+  input: GFM
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+# Navigation (minima): uncomment to show items in header
+# header_pages:
+#   - pages/about.md
+```
+- Local Dev
+  - `bundle install`
+  - `bundle exec jekyll serve` (Jekyll 3.x; livereload not built‑in)
+  - Drafts: `bundle exec jekyll serve --drafts`
+- Publishing (Classic Pages)
+  - Push to `main`, then in GitHub → Settings → Pages:
+    - Source: `Deploy from a branch`
+    - Branch: `main` / root (or `/docs` if you prefer)
+  - For a project site, set `baseurl: "/manifesto"` and `url: https://<username>.github.io`
+- GitHub Config
+  - Branch protection: require PR reviews, status checks (if you add CI later).
+  - No Actions needed; GitHub Pages builds the site.
+- Content Structure
+  - Posts: `_posts/YYYY-MM-DD-title.md`
+  - Pages: `pages/about.md` with `permalink: /about/`
+  - Drafts: `_drafts/*.md` (serve with `--drafts`)
+  - Collections (limited): enable via `_config.yml` with `output: true`
+- Navigation and Layouts
+  - Theme: `minima` (clean, maintained, Pages‑compatible).
+  - Layouts: `_layouts/default.html`, `_layouts/post.html` (override as needed).
+  - Syntax highlighting: Rouge (minima includes styles).
+  - RSS/Atom: via `jekyll-feed`.
+- Assets and SEO
+  - Assets: `assets/css/style.css`, `assets/img/`, `assets/js/`
+  - SEO: `jekyll-seo-tag` → add `{% seo %}` in `<head>`
+  - Sitemap: `jekyll-sitemap` (auto)
+  - robots.txt: optional simple `User-agent: *` / `Allow: /`
+  - Analytics: minima supports `google_analytics:`; for GA4, add your `gtag.js` snippet to `_includes/head.html`.
+- Testing/Quality
+  - Optional local checks:
+    - `bundle exec jekyll build`
+    - `bundle exec htmlproofer ./_site --check-html --allow-hash-href`
+  - Markdown lint: `npm i -D markdownlint-cli` and run `npx markdownlint .`
+- Extensibility
+  - Safe plugins only (as pinned by `github-pages`).
+  - Pagination: classic `jekyll-paginate` is supported but legacy; or hand‑rolled lists.
+  - i18n: limited without Actions.
+- Migration
+  - Existing Markdown: put “posts” with dates into `_posts/`; static docs into `pages/`.
+  - Add front matter to each file:
+```yaml
+---
+title: My Post
+layout: post
+date: 2025-01-31
+---
+```
+
+Plan 2 — GitHub Actions Build + Deploy (recommended default)
+- Summary: Modern Jekyll 4+, flexible plugins, PR previews, deterministic builds. Slightly more setup; best long‑term path.
+- Trade‑offs
+  - Pros: current Jekyll, rich plugins (including pagination v2), PR previews, reproducible builds.
+  - Cons: maintains an Actions workflow; more moving parts.
+- Repo Layout
+  - Same as Plan 1 plus: `.github/workflows/pages.yml`, optional `.github/dependabot.yml`
+- Setup
+  - macOS:
+    - `brew install rbenv` and `rbenv install 3.3.3 && rbenv global 3.3.3`
+    - `gem install bundler`
+  - Cross‑platform: `asdf plugin add ruby && asdf install ruby 3.3.3 && asdf global ruby 3.3.3`; then `gem install bundler`
+- Gemfile (modern Jekyll)
+```ruby
+source "https://rubygems.org"
+ruby "3.3.3"
+gem "jekyll", "~> 4.3.3"
+gem "minima", "~> 2.5"         # or switch to any theme later
+gem "jekyll-feed", "~> 0.17"
+gem "jekyll-sitemap", "~> 1.4"
+gem "jekyll-seo-tag", "~> 2.8"
+gem "jekyll-paginate-v2", "~> 3.0"  # modern pagination
+group :development do
+  gem "webrick", "~> 1.8" # if needed locally on Ruby 3
+  gem "html-proofer", "~> 5.0"
+end
+```
+- _config.yml (baseline with modern options)
+```yaml
+title: Manifesto
+description: Personal site
+url: https://<username>.github.io
+baseurl: "" # for project site use "/manifesto"
+theme: minima
+permalink: /:categories/:year/:month/:day/:title/
+markdown: kramdown
+kramdown:
+  input: GFM
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-paginate-v2
+paginate: 10
+pagination:
+  enabled: true
+  per_page: 10
+  title: ":title - page :num"
+  trail:
+    before: 2
+    after: 2
+# header_pages:
+#   - pages/about.md
+```
+- Local Dev
+  - `bundle install`
+  - `bundle exec jekyll serve --livereload` (Jekyll 4)
+  - Drafts: `bundle exec jekyll serve --livereload --drafts`
+- CI/CD (Pages via Actions with previews)
+  - `.github/workflows/pages.yml`
+```yaml
+name: Build and Deploy Jekyll to Pages
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+      - run: bundle install --jobs 4 --retry 3
+      - run: bundle exec jekyll build --trace
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name != 'pull_request'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+  preview:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'pull_request'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          preview: true
+```
+- GitHub Config
+  - Settings → Pages: Source “GitHub Actions”.
+  - Branch protection: require `build` to pass before merge.
+  - Actions permissions: “Read and write permissions” to allow Pages deploy.
+  - PR previews: enabled by the `preview` job above (ephemeral URLs per PR).
+- Content Structure
+  - Same as Plan 1 plus: rich Collections and Pagination v2.
+```yaml
+collections:
+  essays:
+    output: true
+    permalink: /essays/:title/
+defaults:
+  - scope: { path: "", type: "posts" }
+    values: { layout: post }
+  - scope: { path: "", type: "essays" }
+    values: { layout: page }
+```
+- Navigation and Layouts
+  - Minimal nav via `header_pages` or custom `_includes/header.html`.
+  - Home list with pagination (`index.md` front matter):
+```yaml
+---
+layout: home
+pagination:
+  enabled: true
+---
+```
+  - Syntax highlighting: Rouge (choose a theme or use minima defaults).
+- Assets and SEO
+  - SEO tag in head: `{% seo %}` via `_includes/head.html` or theme.
+  - Sitemap via `jekyll-sitemap`.
+  - robots.txt: add `robots.txt` at root; optional canonical tags handled by SEO tag.
+  - Analytics: GA4 `gtag.js` snippet in `_includes/head.html` (or use `google_analytics:` for legacy UA).
+- Testing/Quality
+  - Link check (CI): add a job or separate workflow:
+```yaml
+- run: bundle exec htmlproofer ./_site --check-html --url-ignore "#"
+```
+  - Markdown lint:
+    - `npm i -D markdownlint-cli`
+    - Add `.markdownlint.json`:
+```json
+{ "default": true, "MD013": false, "MD033": false }
+```
+- Extensibility
+  - Free to add safe plugins not available in classic Pages (e.g., `jekyll-include-cache`, `jekyll-redirect-from`, `jemoji`, `jekyll-mentions`).
+  - Data files: `_data/*.yml` for navigation, metadata, etc.
+  - i18n: add `jekyll-multiple-languages-plugin` (Actions path only).
+  - Pagination v2 supports categories/taxonomies via configs.
+- Migration
+  - Drop dated posts into `_posts/`.
+  - Non‑dated docs → `pages/` with front matter and permalinks.
+  - For existing flat Markdown collections, map them to a custom collection (e.g., `essays`) and set defaults to `layout: page`.
+
+Plan 3 — Actions + Containerized Local Dev (reproducible)
+- Summary: Same deployment as Plan 2, but local dev runs in Docker for consistent Ruby/Node setup across machines.
+- Trade‑offs
+  - Pros: reproducible local env, zero host Ruby dependency.
+  - Cons: Docker overhead; file watch performance on some systems.
+- Repo Layout
+  - Same as Plan 2 plus: `Dockerfile`, `docker-compose.yml` (optional)
+- Setup
+  - Host requirements: Docker Desktop (macOS/Windows) or Docker Engine (Linux).
+  - No host Ruby needed; still keep `Gemfile` as in Plan 2.
+- Dockerfile (simple)
+```dockerfile
+FROM ruby:3.3-alpine
+RUN apk add --no-cache build-base git nodejs
+WORKDIR /site
+COPY Gemfile* ./
+RUN gem install bundler && bundle install
+COPY . .
+EXPOSE 4000 35729
+CMD ["sh", "-lc", "bundle exec jekyll serve --host 0.0.0.0 --livereload"]
+```
+- docker-compose.yml (optional)
+```yaml
+version: "3.9"
+services:
+  jekyll:
+    build: .
+    volumes:
+      - .:/site
+    ports:
+      - "4000:4000"
+      - "35729:35729"
+    command: bundle exec jekyll serve --host 0.0.0.0 --livereload
+```
+- Local Dev
+  - First run: `docker compose up --build` (or `docker build -t manifesto . && docker run -it --rm -p 4000:4000 -p 35729:35729 -v "$PWD:/site" manifesto`)
+  - Drafts: append `--drafts` to the command.
+- CI/CD
+  - Same workflow as Plan 2 (`pages.yml`), runs on GitHub‑hosted Ubuntu.
+  - Optional cache to speed builds:
+```yaml
+- uses: actions/cache@v4
+  with:
+    path: .jekyll-cache
+    key: jekyll-${{ runner.os }}-${{ hashFiles('**/*.md','**/*.html','**/*.scss','_config.yml','Gemfile.lock') }}
+    restore-keys: jekyll-${{ runner.os }}-
+```
+- GitHub Config
+  - Same as Plan 2: Pages “GitHub Actions”, PR previews, branch protections.
+- Content, Navigation, Assets, SEO, Testing, Extensibility
+  - Same as Plan 2; the container only affects local dev.
+- Migration
+  - Same as Plan 2; no change to content model.
+
+Common Snippets and Conventions
+- Minimal Layouts (override theme when needed)
+  - `_layouts/default.html`
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ page.title }} | {{ site.title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% seo %}
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+<body>
+  {% include header.html %}
+  <main class="container">{{ content }}</main>
+  {% include footer.html %}
+</body>
+</html>
+```
+  - `_layouts/post.html`
+```html
+---
+layout: default
+---
+<article>
+  <h1>{{ page.title }}</h1>
+  <p><small>{{ page.date | date_to_long_string }}</small></p>
+  {{ content }}
+</article>
+```
+  - `_includes/header.html`
+```html
+<header>
+  <nav>
+    <a href="{{ '/' | relative_url }}">Home</a>
+    <a href="{{ '/pages/about' | relative_url }}">About</a>
+  </nav>
+</header>
+```
+- Example Pages
+  - `index.md`
+```markdown
+---
+layout: home
+title: Home
+pagination:
+  enabled: true
+---
+```
+  - `pages/about.md`
+```markdown
+---
+layout: page
+title: About
+permalink: /about/
+---
+About this site.
+```
+
+GitHub Pages Modes and Pitfalls
+- User/org vs project site
+  - User/org: repo `username.github.io`, `url: https://username.github.io`, `baseurl: ""`
+  - Project: repo `manifesto`, site at `https://username.github.io/manifesto`, set `baseurl: "/manifesto"`
+- Local vs production URLs
+  - Use `relative_url` and `absolute_url` filters; avoid hard‑coding paths.
+- Safe plugins
+  - Classic (`github-pages`): limited to the set shipped by the gem.
+  - Actions: you choose; keep to well‑known, maintained plugins.
+- Caching
+  - Actions: cache Bundler via `ruby/setup-ruby@v1` (bundler-cache: true) plus optional `.jekyll-cache`.
+- Custom domain
+  - Add `CNAME` file with your domain, configure DNS (ALIAS/ANAME or A/AAAA for apex; CNAME for subdomain).
+
+Optional Niceties
+- Dependabot for Ruby
+  - `.github/dependabot.yml`
+```yaml
+version: 2
+updates:
+  - package-ecosystem: bundler
+    directory: "/"
+    schedule: { interval: weekly }
+```
+- Pre‑commit hooks
+  - Use `pre-commit` for markdownlint and simple checks; or run them in CI only.
+
+Recommended Default Path
+- Choose Plan 2 (GitHub Actions). You get current Jekyll, richer plugin support, PR preview URLs, and reproducible builds with minimal added complexity. Plan 3 is great if you want Dockerized local dev; Plan 1 is fine for the simplest setup with the trade‑offs above.
+
+Initial Commit Checklist (any plan)
+- Add: `Gemfile`, `_config.yml`, `_posts/`, `pages/about.md`, `_layouts/`, `_includes/`, `assets/css/style.css`, `index.md`, `.gitignore`, `README.md`
+- For Plan 2/3: add `.github/workflows/pages.yml` (and Docker files for Plan 3)
+- Commands:
+  - `git add . && git commit -m "Initialize Jekyll site" && git push -u origin main"`
+
+If you want, I can tailor the snippets to your exact GitHub username (for `url/baseurl`) and generate a ready‑to‑paste first commit file list.
+[2025-09-12T17:38:44] tokens used: 5866

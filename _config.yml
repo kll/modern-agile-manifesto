@@ -1,0 +1,10 @@
+title: "manifesto"
+description: "A tiny site of static pages"
+
+# Project site on GitHub Pages
+url: "https://kll.github.io"
+baseurl: "/manifesto"
+
+markdown: kramdown
+highlighter: rouge
+permalink: pretty
