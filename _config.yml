@@ -1,9 +1,9 @@
-title: "manifesto"
+title: "Modern Agile Manifesto"
 description: "A tiny site of static pages"
 
 # Project site on GitHub Pages
 url: "https://kll.github.io"
-baseurl: "/manifesto"
+baseurl: "/modern-agile-manifesto"
 
 markdown: kramdown
 highlighter: rouge

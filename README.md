@@ -1,4 +1,4 @@
-# Manifesto — Static Pages on GitHub Pages
+# Modern Agile Manifesto — Static Pages on GitHub Pages
 
 This is a tiny Jekyll site that serves a small set of rarely changing Markdown pages. There is no blog, no RSS, and no theme bloat.
 
@@ -18,14 +18,14 @@ gem install bundler
 bundle install
 bundle exec jekyll serve --livereload
 ```
-Open http://127.0.0.1:4000/manifesto/ if you’ve set `baseurl: "/manifesto"` locally. Otherwise visit http://127.0.0.1:4000/.
+Open http://127.0.0.1:4000/modern-agile-manifesto/ if you’ve set `baseurl: "/modern-agile-manifesto"` locally. Otherwise visit http://127.0.0.1:4000/.
 
 ## Deployment
 - Pushing to `main` runs the “Build and Deploy to Pages” workflow.
-- Site URL: https://kll.github.io/manifesto/
+- Site URL: https://kll.github.io/modern-agile-manifesto/
 - Relevant `_config.yml` settings in this repo:
   - `url: https://kll.github.io`
-  - `baseurl: "/manifesto"`
+  - `baseurl: "/modern-agile-manifesto"`
 
 ## Add a Page
 Create a Markdown file in `pages/` with front matter and a permalink, then link to it.
@@ -40,7 +40,7 @@ permalink: /principles/
 
 Your content here in Markdown.
 ```
-It will publish at `https://kll.github.io/manifesto/principles/`.
+It will publish at `https://kll.github.io/modern-agile-manifesto/principles/`.
 
 Navigation links are hard‑coded in `_layouts/default.html` — update that file to add/remove items in the header.
 
