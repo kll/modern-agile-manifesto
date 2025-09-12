@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Allow manual bypass if absolutely necessary
+if [[ "${SKIP_MARKDOWNLINT:-}" == "1" ]]; then
+  echo "[pre-push] SKIP_MARKDOWNLINT=1 set; skipping Markdown lint."
+  exit 0
+fi
+
+echo "[pre-push] Running markdownlint on Markdown files..."
+
+run_lint() {
+  local cmd=("$@")
+  # Lint repo root; ignores pulled from .markdownlintignore
+  "${cmd[@]}" .
+}
+
+# Prefer local install if present
+if [[ -x "node_modules/.bin/markdownlint" ]]; then
+  run_lint node_modules/.bin/markdownlint
+elif command -v markdownlint >/dev/null 2>&1; then
+  run_lint markdownlint
+elif command -v npx >/dev/null 2>&1; then
+  echo "[pre-push] Using npx to run markdownlint-cli..."
+  run_lint npx --yes markdownlint-cli@0.39.0
+else
+  echo "[pre-push] ERROR: markdownlint not found and npx is unavailable." >&2
+  echo "Install Node and either: 'npm i -D markdownlint-cli' or install Node/npm so npx is available." >&2
+  echo "Alternatively, set SKIP_MARKDOWNLINT=1 to bypass (not recommended)." >&2
+  exit 1
+fi
+
+echo "[pre-push] Markdown lint passed. Proceeding with push."
+exit 0
+

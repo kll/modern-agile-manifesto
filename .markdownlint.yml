@@ -1,0 +1,11 @@
+default: true
+
+# Keep things simple: ignore artificial line-length violations
+MD013: false
+
+# Allow inline HTML if ever needed in docs (keep minimal usage)
+MD033: false
+
+# Require final newline at EOF (consistent with .editorconfig)
+MD047: true
+
