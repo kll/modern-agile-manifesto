@@ -22,7 +22,6 @@
       <nav aria-label="Primary">
         {%- assign current = page.url -%}
         <a href="{{ '/' | relative_url }}" {% if current == '/' %}aria-current="page"{% endif %}>Home</a>
-        <a href="{{ '/about/' | relative_url }}" {% if current == '/about/' %}aria-current="page"{% endif %}>About</a>
       </nav>
     </header>
     <main>
