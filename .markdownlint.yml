@@ -8,8 +8,13 @@ MD013:
   tables: false               # ignore tables
   stern: false
 
-# Allow inline HTML if ever needed in docs (keep minimal usage)
-MD033: false
+# Allow the top level heading in addition to the front matter title
+MD025:
+  front_matter_title: ""
+
+# Enforce ordered lists by number style
+MD029:
+  style: ordered
 
 # Require final newline at EOF (consistent with .editorconfig)
 MD047: true
